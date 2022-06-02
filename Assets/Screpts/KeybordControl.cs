@@ -9,21 +9,23 @@ public class KeybordControl : MonoBehaviour
     private Animator _anim;
     private CharacterController _controller;
     private Vector3 _velocity = Vector3.zero;
-    private Vector2 _mouserotation = Vector2.zero;
     private bool _shouldMove;
-    private Vector3 _rotat = new Vector3(0, 0, 0);
 
     private Vector3 playerVelocity;
-    private bool groundedPlayer;
     private float playerSpeed = 2.0f;
-    private float jumpHeight = 1.0f;
-    private float gravityValue = -9.81f;
     private float _rotationSpeed = 180;
+
+    public float jumpSpeed = 15.0f;
+    public float gravity = -9.8f;
+    public float terminalVelocity = -10.0f;
+    public float minFall = -1.5f;
+    private float _vertSpeed;
 
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
         _anim = GetComponent<Animator>();
+        _vertSpeed = minFall;
     }
 
     private void FixedUpdate()
@@ -32,29 +34,20 @@ public class KeybordControl : MonoBehaviour
         Rotation();
     }
 
+    private void Update()
+    {
+        Jump();
+    }
+
     private void Move()
     {
         _velocity.x = Input.GetAxis("Horizontal");
         _velocity.z = Input.GetAxis("Vertical");
-        _velocity.y = Input.GetAxis("Jump");
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
             _velocity.z *= 2;
         }
-
-        groundedPlayer = _controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
-
-        if (_velocity.y > 0 && groundedPlayer)
-        {
-            playerVelocity.y += 10; //Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
-        //playerVelocity.y += gravityValue * Time.deltaTime;
 
         _shouldMove = _velocity.x > 0.1f || _velocity.x < -0.1f || _velocity.z > 0.1f || _velocity.z < -0.1f;
 
@@ -65,6 +58,35 @@ public class KeybordControl : MonoBehaviour
         playerVelocity = transform.right * _velocity.x * playerSpeed + transform.forward * _velocity.z * playerSpeed + transform.up * _velocity.y;
 
         _controller.SimpleMove(playerVelocity);
+    }
+
+    private void Jump()
+    {
+        if (_controller.isGrounded)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                _vertSpeed = jumpSpeed;
+            }
+            else
+            {
+                _vertSpeed = minFall;
+            }
+        }
+        else
+        {
+            _vertSpeed += gravity * 5 * Time.deltaTime;
+        }
+
+        if (_vertSpeed < terminalVelocity)
+        {
+            _vertSpeed = terminalVelocity;
+        }
+
+        var movement = new Vector3(0, 0, 0);
+        movement.y = _vertSpeed;
+        movement *= Time.deltaTime;
+        _controller.Move(movement);
     }
 
     private void Rotation()
