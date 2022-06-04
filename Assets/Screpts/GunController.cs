@@ -23,6 +23,8 @@ public class GunController : MonoBehaviour
         _anim = GetComponent<Animator>();
         _rightHandObj = _gunObj.GetComponent<GunModel>().RightHandObj;
         _leftHandObj = _gunObj.GetComponent<GunModel>().LeftHandObj;
+
+        
     }
 
     private void Update()
@@ -47,16 +49,16 @@ public class GunController : MonoBehaviour
         {
             if (_rightHandObj != null)
             {
-                _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0.5f);
-                _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0.5f);
+                _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+                _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
                 _anim.SetIKPosition(AvatarIKGoal.RightHand, _rightHandObj.position);
                 _anim.SetIKRotation(AvatarIKGoal.RightHand, _rightHandObj.rotation);
             }
 
             if (_leftHandObj != null)
             {
-                _anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0.5f);
-                _anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0.5f);
+                _anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+                _anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
                 _anim.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandObj.position);
                 _anim.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandObj.rotation);
             }
