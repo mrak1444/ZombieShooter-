@@ -7,4 +7,5 @@ public interface IZombie
     NavMeshAgent navMeshUnite { get; }
     Vector3 nextPosition { get; set; }
     bool StopUnite { set; }
+    int Health { get; set; } 
 }

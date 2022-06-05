@@ -4,17 +4,28 @@ using UnityEngine.AI;
 public class ZombieModel : MonoBehaviour, IZombie
 {
     [SerializeField] private Transform _firstCheckpointTransform;
+    [SerializeField] private int _health = 3;
 
     private NavMeshAgent _meshUnite;
     private Animator _anim;
     private Vector3 _nextPosition;
     private Vector3 _worldDeltaPosition;
     private bool _shouldMove;
+    
 
     public Vector3 zombiePosition => transform.position;
     public NavMeshAgent navMeshUnite => _meshUnite;
     public Vector3 nextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
+    public int Health 
+    { 
+        get => _health;
+        set
+        {
+            _health -= value;
+            if (_health <= 0) gameObject.SetActive(false);
+        } 
+    }
 
     private void Start()
     {
