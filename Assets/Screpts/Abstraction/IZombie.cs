@@ -13,4 +13,7 @@ public interface IZombie
     bool ZombieRun { get; set; }
     bool ZombieAttack { get; set; }
     int Health { get; set; } 
+    Transform AttackPoint { set; }
+    void AttackWeightR(float weight);
+    void AttackWeightL(float weight);
 }

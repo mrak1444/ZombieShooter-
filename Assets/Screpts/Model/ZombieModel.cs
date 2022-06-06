@@ -7,6 +7,9 @@ public class ZombieModel : MonoBehaviour, IZombie
     [SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
 
+    private Transform _attackPoint;
+    private float _attackWeightR = 0;
+    private float _attackWeightL = 0;
     private NavMeshAgent _meshUnite;
     private Animator _anim;
     private Vector3 _nextPosition;
@@ -81,7 +84,8 @@ public class ZombieModel : MonoBehaviour, IZombie
         }
     }
 
-    
+    public Transform AttackPoint { set => _attackPoint = value; }
+
     private void Start()
     {
         _meshUnite = GetComponent<NavMeshAgent>();
@@ -113,5 +117,34 @@ public class ZombieModel : MonoBehaviour, IZombie
     private void OnAnimatorMove()
     {
         transform.position = _meshUnite.nextPosition;
+    }
+
+    public void AttackWeightR(float weight)
+    {
+        _attackWeightR = weight;
+    }
+
+    public void AttackWeightL(float weight)
+    {
+        _attackWeightL = weight;
+    }
+
+    private void OnAnimatorIK()
+    {
+        if (_anim)
+        {
+            if(_attackPoint != null)
+            {
+                _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, _attackWeightR);
+                _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, _attackWeightR);
+                _anim.SetIKPosition(AvatarIKGoal.RightHand, _attackPoint.position);
+                _anim.SetIKRotation(AvatarIKGoal.RightHand, _attackPoint.rotation);
+
+                _anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, _attackWeightL);
+                _anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, _attackWeightL);
+                _anim.SetIKPosition(AvatarIKGoal.LeftHand, _attackPoint.position);
+                _anim.SetIKRotation(AvatarIKGoal.LeftHand, _attackPoint.rotation);
+            }
+        }
     }
 }

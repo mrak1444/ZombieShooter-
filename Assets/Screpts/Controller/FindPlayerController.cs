@@ -39,16 +39,19 @@ public class FindPlayerController
                             zombie.ZombieRun = true;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
+                            zombie.AttackPoint = null;
                         }
                         else if(Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) <= 2f && Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) > 1f)
                         {
                             zombie.ZombieAttack = true;
                             zombie.StopUnite = false;
+                            zombie.AttackPoint = player.AttackPoint;
                         }
                         else if(Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) <= 1f)
                         {
                             zombie.StopUnite = true;
                             zombie.ZombieRun = false;
+                            zombie.AttackPoint = null;
                         }
                         else
                         {
@@ -57,6 +60,7 @@ public class FindPlayerController
                             zombie.ZombieRun = false;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
+                            zombie.AttackPoint = null;
                         }
                     }
                     else
@@ -68,6 +72,7 @@ public class FindPlayerController
                             zombie.ZombieRun = true;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
+                            zombie.AttackPoint = null;
                         }
                         else
                         {
@@ -76,6 +81,7 @@ public class FindPlayerController
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
                             zombie.ZombieRun = false;
+                            zombie.AttackPoint = null;
                         }
                     }
                 }
