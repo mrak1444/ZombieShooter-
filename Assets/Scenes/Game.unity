@@ -28038,7 +28038,11 @@ MonoBehaviour:
   _layermask:
     serializedVersion: 2
     m_Bits: 4294967295
-  _gunPref: {fileID: 6568195364317171553, guid: 28b5fe1bc1fed724597089df839ab2c2, type: 3}
+  _gunPref:
+  - {fileID: 9175929912471593354, guid: 42327cf27ff333745ab36733532d1da8, type: 3}
+  - {fileID: 4407889560762141937, guid: f5d896d52f9590b41af9f41db61bbc42, type: 3}
+  - {fileID: 7278734102484149782, guid: bf8b80b8714e937429a14d438f852bce, type: 3}
+  - {fileID: 5870596009829638997, guid: 7029ef2c4c03359408db021843d1af8a, type: 3}
   _parent: {fileID: 8473540941512188640}
   _gunPoint: {fileID: 1956249528}
   _lookPoint: {fileID: 2117393091}

@@ -962,7 +962,9 @@ MonoBehaviour:
   _damageInventoryTxt: {fileID: 1822834857}
   _RangeInventoryTxt: {fileID: 622344786}
   _priceInventoryTxt: {fileID: 605721918}
+  _AddInventoryButton: {fileID: 874957906}
   _buyYesInventoryButton: {fileID: 1355564823}
+  _buyNoInventoryButton: {fileID: 2081067968}
   _backInventoryButton: {fileID: 662936135}
   _moneyInventoryTxt: {fileID: 686483834}
   _gameMode: {fileID: 1219893093}
@@ -3070,7 +3072,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1000
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3388,7 +3390,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.25
+  m_fontSize: 41.8
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4043,7 +4045,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.45
+  m_fontSize: 44.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4413,7 +4415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &874957903
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6873,7 +6875,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 50, y: -50}
-  m_SizeDelta: {x: -123.25, y: 300.80457}
+  m_SizeDelta: {x: -123.25, y: 371.40247}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1330837322
 MonoBehaviour:

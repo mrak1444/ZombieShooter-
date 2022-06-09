@@ -5,7 +5,7 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     [SerializeField] private LayerMask _layermask;
-    [SerializeField] private GameObject _gunPref;
+    [SerializeField] private GameObject[] _gunPref;
     [SerializeField] private GameObject _parent;
     [SerializeField] private GameObject _gunPoint;
     [SerializeField] private GameObject _lookPoint;
@@ -16,12 +16,18 @@ public class GunController : MonoBehaviour
     private Animator _anim;
     private Transform _rightHandObj = null;
     private Transform _leftHandObj = null;
+    private Dictionary<string, GameObject> _gunPrefDict = new Dictionary<string, GameObject>();
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        _gunObj = Instantiate(_gunPref, _gunPoint.transform.position, Quaternion.identity);
+        foreach (var item in _gunPref)
+        {
+            _gunPrefDict.Add(item.name, item);
+        }
+
+        _gunObj = Instantiate(_gunPrefDict[GameProfile.GunId], _gunPoint.transform.position, Quaternion.identity);
         _gunObj.transform.SetParent(_parent.transform);
         _anim = GetComponent<Animator>();
         _rightHandObj = _gunObj.GetComponent<GunModel>().RightHandObj;

@@ -32,6 +32,8 @@ public class GameController : MonoBehaviour
         {
             _player.Add(player.GetComponent<IPlayer>());
         }
+
+        Debug.Log($"Player name: {GameProfile.PlayerName}");
     }
 
     void Update()

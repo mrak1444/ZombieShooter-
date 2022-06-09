@@ -1,14 +1,14 @@
-using Newtonsoft.Json.Linq;
+using Photon.Pun;
+using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour
+public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 {
     [Header("Account")]
     [SerializeField] private GameObject _account;
@@ -49,7 +49,9 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text _damageInventoryTxt;
     [SerializeField] private TMP_Text _RangeInventoryTxt;
     [SerializeField] private TMP_Text _priceInventoryTxt;
+    [SerializeField] private Button _AddInventoryButton;
     [SerializeField] private Button _buyYesInventoryButton;
+    [SerializeField] private GameObject _buyNoInventoryButton;
     [SerializeField] private Button _backInventoryButton;
     [SerializeField] private TMP_Text _moneyInventoryTxt;
 
@@ -59,6 +61,16 @@ public class UIController : MonoBehaviour
     [SerializeField] private Button _multiplayerGameModeButton;
 
     private readonly Dictionary<string, CatalogItem> _catalog = new Dictionary<string, CatalogItem>();
+    private Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
+    private List<ItemInstance> _inventoryList = new List<ItemInstance>();
+    private string _nameForBuy;
+    private int _damageForBuy;
+    private int _rangeForBuy;
+    private string _itemIdForBuy;
+    private int _priceForBuy;
+    private bool _connectedToPhotone = false;
+    private RoomOptions _roomOptions = new RoomOptions();
+    private TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
 
 
     private void Start()
@@ -81,9 +93,15 @@ public class UIController : MonoBehaviour
         _buyGunPlayerInfoButton.onClick.AddListener(BuyGunPlayerInfoButton);
 
         //Inventory
+        _AddInventoryButton.onClick.AddListener(AddInventoryButton);
         _buyYesInventoryButton.onClick.AddListener(BuyYesInventoryButton);
         _backInventoryButton.onClick.AddListener(BackInventoryButton);
+
+        //GameMode
+        _singleplayerGameModeButton.onClick.AddListener(SingleplayerGameModeButton);
     }
+
+    
 
     #region [Account]
     private void SignInAccountButton()
@@ -117,9 +135,9 @@ public class UIController : MonoBehaviour
         }, result =>
         {
             PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest(), OnGetAccountSuccess, OnFailure);
-            //PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
+            PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
             PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest(), OnGetCatalogSuccess, OnFailure);
-
+            
             Debug.Log($"Success: {_usernameSignIn.text}");
 
             _playerInfo.SetActive(true);
@@ -133,27 +151,18 @@ public class UIController : MonoBehaviour
 
     }
 
-    
-
     private void OnFailure(PlayFabError error)
     {
         var errorMessage = error.GenerateErrorReport();
         Debug.LogError($"Something went wrong: {errorMessage}");
     }
 
-    /*private void OnGetInventorySuccess(GetUserInventoryResult obj)
+    private void OnGetInventorySuccess(GetUserInventoryResult obj)
     {
-        //_nameGunPlayerInfoTxt
-        var inv = obj.Inventory;
-        if(inv.Count == 0)
-        {
-            _nameGunPlayerInfoTxt.text = "No gun";
-        }
-        else
-        {
-            _nameGunPlayerInfoTxt.text = inv[0].DisplayName;
-        }
-    }*/
+        _inventoryList = obj.Inventory;
+        _virtualCurrency = obj.VirtualCurrency;
+        _moneyInventoryTxt.text = _virtualCurrency["GD"].ToString();
+    }
 
     #endregion
 
@@ -212,14 +221,44 @@ public class UIController : MonoBehaviour
     private void OnGetAccountSuccess(GetAccountInfoResult result)
     {
         _namePlayerPlayerInfoTxt.text = result.AccountInfo.Username;
+        GameProfile.PlayerName = result.AccountInfo.Username;
+        //StartPhotoneServer(result.AccountInfo.Username);
     }
 
     #endregion
 
     #region [Inventory]
 
+    private void AddInventoryButton()
+    {
+        _nameGunPlayerInfoTxt.text = _nameForBuy;
+        Debug.Log(_itemIdForBuy);
+        //добавляется оруужие в меню и выходит назад в меню
+        _inventory.SetActive(false);
+        _playerInfo.SetActive(true);
+    }
+
     private void BuyYesInventoryButton()
     {
+        PlayFabClientAPI.PurchaseItem(new PurchaseItemRequest
+        {
+            // In your game, this should just be a constant matching your primary catalog
+            CatalogVersion = "2",
+            ItemId = _itemIdForBuy,
+            Price = _priceForBuy,
+            VirtualCurrency = "GD"
+        }, LogSuccess => 
+        {
+            _nameGunPlayerInfoTxt.text = _nameForBuy;
+            Debug.Log("Gun buyed");
+        }
+        , LogFailure => 
+        {
+            Debug.LogError("Gun not buyed");
+        });
+
+
+
         //покупается оружие и добавляется на сервер клиету и выходит назад в меню
         _inventory.SetActive(false);
         _playerInfo.SetActive(true);
@@ -258,17 +297,97 @@ public class UIController : MonoBehaviour
             //Debug.Log(_catalog["gun"+(i+1).ToString()].DisplayName);
             var cat = _catalog["gun" + (i + 1).ToString()];
             var spr = _gunIcons[i];
-            _gunsInventoryButton[i].onClick.AddListener(delegate { ClickButtons((CatalogItem)cat, (Sprite) spr); });
+            _gunsInventoryButton[i].onClick.AddListener(delegate { ClickButtonsInventory((CatalogItem)cat, (Sprite) spr); });
         }
     }
 
-    private void ClickButtons(CatalogItem cat, Sprite spr)
+    private void ClickButtonsInventory(CatalogItem cat, Sprite spr)
     {
         _gunSelectedInventoryImage.sprite = spr;
         _nameGunInventoryTxt.text = cat.DisplayName;
+        _nameForBuy = cat.DisplayName;
         _damageInventoryTxt.text = CustomDataInfo.Info(cat.CustomData).damage.ToString();
+        _damageForBuy = CustomDataInfo.Info(cat.CustomData).damage;
         _RangeInventoryTxt.text = CustomDataInfo.Info(cat.CustomData).range.ToString();
+        _rangeForBuy = CustomDataInfo.Info(cat.CustomData).range;
         _priceInventoryTxt.text = cat.VirtualCurrencyPrices["GD"].ToString();
+        _priceForBuy = (int)cat.VirtualCurrencyPrices["GD"];
+        _itemIdForBuy = cat.ItemId;
+
+        if (_inventoryList.Count != 0)
+        {
+            for (int i = 0; i < _inventoryList.Count; i++)
+            {
+                if (cat.ItemId.Equals(_inventoryList[i].ItemId))     //if(cat.ItemId == _inventoryList[i].ItemId)
+                {
+                    _AddInventoryButton.gameObject.SetActive(true);
+                    _buyNoInventoryButton.SetActive(false);
+                    _buyYesInventoryButton.gameObject.SetActive(false);
+                    return;
+                }
+                else
+                {
+                    if (_virtualCurrency["GD"] >= cat.VirtualCurrencyPrices["GD"])
+                    {
+                        _AddInventoryButton.gameObject.SetActive(false);
+                        _buyNoInventoryButton.SetActive(false);
+                        _buyYesInventoryButton.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        _AddInventoryButton.gameObject.SetActive(false);
+                        _buyNoInventoryButton.SetActive(true);
+                        _buyYesInventoryButton.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (_virtualCurrency["GD"] >= cat.VirtualCurrencyPrices["GD"])
+            {
+                _AddInventoryButton.gameObject.SetActive(false);
+                _buyNoInventoryButton.SetActive(false);
+                _buyYesInventoryButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                _AddInventoryButton.gameObject.SetActive(false);
+                _buyNoInventoryButton.SetActive(true);
+                _buyYesInventoryButton.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    #endregion
+
+    #region [GameMode]
+
+    private void SingleplayerGameModeButton()
+    {
+        GameProfile.GunId = _itemIdForBuy;
+        GameProfile.GunDamage = _damageForBuy;
+        GameProfile.GunRange = _rangeForBuy;
+
+        SceneManager.LoadScene("Game");
+    }
+
+    #endregion
+
+    #region [Photone Start]
+
+    private void StartPhotoneServer(string PlayerName)
+    {
+        PhotonNetwork.NickName = PlayerName;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.GameVersion = "1";
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Photone! OnConnectedToMaster");
+        _connectedToPhotone = true;
     }
 
     #endregion
