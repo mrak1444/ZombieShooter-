@@ -90,9 +90,9 @@ public class ZombieModel : MonoBehaviour, IZombie
     {
         _meshUnite = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
-        //_meshUnite.updatePosition = false;
+        _meshUnite.updatePosition = false;
         _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.SetDestination(nextPosition);
+        _meshUnite.destination = nextPosition;
         _meshUnite.isStopped = false;
         _anim.SetBool("Move", true);
     }
@@ -101,12 +101,10 @@ public class ZombieModel : MonoBehaviour, IZombie
     {
         if (!_meshUnite.isStopped)
         {
-            /*_worldDeltaPosition = _meshUnite.nextPosition - transform.position;
+            _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
             var num = Vector3.Dot(transform.forward, _worldDeltaPosition);
             _shouldMove = (num > 0 ? 1 : 0) > 0 && _meshUnite.remainingDistance > _meshUnite.radius && !_zombieAttack && !_zombieDie && !_zombieRun;
-            _anim.SetBool("Move", _shouldMove);*/
-
-            _anim.SetBool("Move", _meshUnite.velocity.magnitude > 0.01f);
+            _anim.SetBool("Move", _shouldMove);
         }
     }
 
@@ -114,6 +112,11 @@ public class ZombieModel : MonoBehaviour, IZombie
     {
         yield return new WaitForSeconds(5f);
         gameObject.SetActive(false);
+    }
+
+    private void OnAnimatorMove()
+    {
+        transform.position = _meshUnite.nextPosition;
     }
 
     public void AttackWeightR(float weight)
