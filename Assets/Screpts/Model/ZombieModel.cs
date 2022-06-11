@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,12 +6,11 @@ public class ZombieModel : MonoBehaviour, IZombie
 {
     [SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
-    [SerializeField] private TMP_Text _deadZombie;
 
     private Transform _attackPoint;
     private float _attackWeightR = 0;
     private float _attackWeightL = 0;
-    private NavMeshAgent _meshUnite ;
+    private NavMeshAgent _meshUnite;
     private Animator _anim;
     private Vector3 _nextPosition;
     private Vector3 _worldDeltaPosition;
@@ -21,34 +19,21 @@ public class ZombieModel : MonoBehaviour, IZombie
     private bool _zombieDie = false;
     private bool _zombieRun = false;
     private bool _zombieAttack = false;
-    private System.Random _rnd = new System.Random();
 
 
-    public string ZombieName { get => gameObject.name; }
+
     public Vector3 zombiePosition => transform.position;
     public NavMeshAgent navMeshUnite => _meshUnite;
-    
-    public Vector3 nextPosition 
-    { 
-        get => _nextPosition;
-        set
-        {
-            _nextPosition = value;
-            StopUnite = true;
-            StartCoroutine(ZombieNextPosition());
-        }
-    }
-
-    public bool StopUnite { get => _meshUnite.isStopped; set => _meshUnite.isStopped = value; }
+    public Vector3 nextPosition { get => _nextPosition; set => _nextPosition = value; }
+    public bool StopUnite { set => _meshUnite.isStopped = value; }
     public int Health 
     { 
         get => _health;
         set
         {
             _health -= value;
-            if (_health <= 0 && !_zombieDie)
+            if (_health <= 0)
             {
-                _deadZombie.text = (int.Parse(_deadZombie.text) + 1).ToString();
                 ZombieDie = true;
                 _anim.SetBool("Death", true);
                 StopUnite = true;
@@ -105,34 +90,22 @@ public class ZombieModel : MonoBehaviour, IZombie
     {
         _meshUnite = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
-        //_meshUnite.updatePosition = false;
+        _meshUnite.updatePosition = false;
         _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.SetDestination(nextPosition);
+        _meshUnite.destination = nextPosition;
         _meshUnite.isStopped = false;
         _anim.SetBool("Move", true);
     }
 
-    private IEnumerator ZombieNextPosition()
-    {
-        var num = (float)(_rnd.NextDouble() + 5d);
-        yield return new WaitForSeconds(num);
-        StopUnite = false;
-        _meshUnite.SetDestination(nextPosition);
-    }
-
     private void Update()
     {
-        /*if (!_meshUnite.isStopped)
+        if (!_meshUnite.isStopped)
         {
             _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
             var num = Vector3.Dot(transform.forward, _worldDeltaPosition);
             _shouldMove = (num > 0 ? 1 : 0) > 0 && _meshUnite.remainingDistance > _meshUnite.radius && !_zombieAttack && !_zombieDie && !_zombieRun;
-            //_anim.SetBool("Move", _shouldMove);
-
-            
-            Debug.Log($"{gameObject.name}- (111) - {_meshUnite.velocity.magnitude}");
-        }*/
-        _anim.SetBool("Move", _meshUnite.velocity.magnitude > 0.01f);
+            _anim.SetBool("Move", _shouldMove);
+        }
     }
 
     IEnumerator DeathZombie()
@@ -141,10 +114,10 @@ public class ZombieModel : MonoBehaviour, IZombie
         gameObject.SetActive(false);
     }
 
-    /*private void OnAnimatorMove()
+    private void OnAnimatorMove()
     {
         transform.position = _meshUnite.nextPosition;
-    }*/
+    }
 
     public void AttackWeightR(float weight)
     {

@@ -137,9 +137,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
             PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest(), OnGetAccountSuccess, OnFailure);
             PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
             PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest(), OnGetCatalogSuccess, OnFailure);
-            PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnGetUserData, OnFailure);
-
-
+            
             Debug.Log($"Success: {_usernameSignIn.text}");
 
             _playerInfo.SetActive(true);
@@ -151,11 +149,6 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
         //подключается к серверам поле удачного подключения открывает панель PlayerInfo
 
-    }
-
-    private void OnGetUserData(GetUserDataResult obj)
-    {
-        GameProfile.PlayerHealth = int.Parse(obj.Data["Health"].Value);
     }
 
     private void OnFailure(PlayFabError error)

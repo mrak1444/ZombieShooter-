@@ -40,14 +40,14 @@ public class GunController : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-            if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, GameProfile.GunRange, _layermask))
+            if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, 100f, _layermask))
             {
                 Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 100f);
                 
                 if (hit.transform.gameObject.CompareTag("Zombie"))
                 {
                     //Debug.Log($"{hit.collider.name} - {hit.transform.gameObject.GetComponent<IZombie>().Health - 1}");
-                    hit.transform.gameObject.GetComponent<IZombie>().Health = GameProfile.GunDamage;
+                    hit.transform.gameObject.GetComponent<IZombie>().Health = 1;
                 }
             }
             else
