@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerModel : MonoBehaviour, IPlayer
 {
-    [SerializeField] private int _health = 20;
     [SerializeField] private Transform _attackPoint;
+    [SerializeField] private TMP_Text _playerName;
+    [SerializeField] private TMP_Text _playerHealth;
 
     private Animator _anim;
+    private int _health = 5;
 
     public int Health 
     { 
@@ -15,8 +18,8 @@ public class PlayerModel : MonoBehaviour, IPlayer
         set
         {
              _health -= value;
-            Debug.Log(_health);
-            if(_health <= 0)
+            _playerHealth.text = _health.ToString();
+            if (_health <= 0)
             {
                 _anim.SetBool("Death", true);
                 StartCoroutine(DeathZombie());
@@ -31,6 +34,9 @@ public class PlayerModel : MonoBehaviour, IPlayer
     private void Start()
     {
         _anim = GetComponent<Animator>();
+        _playerName.text = GameProfile.PlayerName;
+        _health = GameProfile.PlayerHealth;
+        _playerHealth.text = _health.ToString();
     }
 
     IEnumerator DeathZombie()

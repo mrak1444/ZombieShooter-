@@ -3,11 +3,12 @@ using UnityEngine.AI;
 
 public interface IZombie
 {
+    string ZombieName { get; }
     Vector3 zombieForward { get; }
     Vector3 zombiePosition { get; }
     NavMeshAgent navMeshUnite { get; }
     Vector3 nextPosition { get; set; }
-    bool StopUnite { set; }
+    bool StopUnite { get; set; }
     bool StopUniteCheckpointController { get;  set; }
     bool ZombieDie { get; set; }
     bool ZombieRun { get; set; }
