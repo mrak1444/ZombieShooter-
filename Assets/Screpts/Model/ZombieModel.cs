@@ -26,27 +26,27 @@ public class ZombieModel : MonoBehaviour, IZombie
     public NavMeshAgent navMeshUnite => _meshUnite;
     public Vector3 nextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
-    public int Health 
-    { 
-        get => _health;
-        set
-        {
-            _health -= value;
-            if (_health <= 0)
-            {
-                ZombieDie = true;
-                _anim.SetBool("Death", true);
-                StopUnite = true;
-                StartCoroutine(DeathZombie());
-            }
-        } 
-    }
+    public int Health { get => _health; set => _health = value; }
 
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
 
     public Vector3 zombieForward => transform.forward;
 
-    public bool ZombieDie { get => _zombieDie; set => _zombieDie = value; }
+    public bool ZombieDie 
+    { 
+        get => _zombieDie;
+        set
+        { 
+            _zombieDie = value;
+            if (_zombieDie)
+            {
+                _anim.SetBool("Death", true);
+                StopUnite = true;
+                StartCoroutine(DeathZombie());
+            }
+        }
+    }
+
     public bool ZombieRun 
     { 
         get => _zombieRun;

@@ -9,4 +9,5 @@ public class GunModel : MonoBehaviour
 
     public Transform RightHandObj => _rightHandObj;
     public Transform LeftHandObj => _leftHandObj;
+    public int Damage => GameProfile.GunDamage;
 }

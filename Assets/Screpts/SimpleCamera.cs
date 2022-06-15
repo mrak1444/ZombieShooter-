@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SimpleCamera : MonoBehaviour
 {
     //Цель
-    public Transform target;
+    [SerializeField] private Transform target;
 
     //Скорость слежения
-    public float speed = 4f;
+    [SerializeField] private float speed = 4f;
 
     //Маска слоев препятствий
-    public LayerMask maskObstacles;
+    [SerializeField] private LayerMask maskObstacles;
 
     private Vector3 _position;
 

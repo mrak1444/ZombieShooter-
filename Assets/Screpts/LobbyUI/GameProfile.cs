@@ -13,4 +13,8 @@ public static class GameProfile
     public static string GunId { get => _gunId; set => _gunId = value; }
     public static int GunDamage { get => _gunDamage; set => _gunDamage = value; }
     public static int GunRange { get => _gunRange; set => _gunRange = value; }
+
+    public static SubscriptionProperty<SubscriptionData> DamageForZombie = new SubscriptionProperty<SubscriptionData>();
+
+    public static SubscriptionProperty<SubscriptionData> DamageForPlayer = new SubscriptionProperty<SubscriptionData>();
 }

@@ -13,6 +13,7 @@ public class GunController : MonoBehaviour
     
 
     private GameObject _gunObj;
+    private GunModel _gunModel;
     private Animator _anim;
     private Transform _rightHandObj = null;
     private Transform _leftHandObj = null;
@@ -30,8 +31,9 @@ public class GunController : MonoBehaviour
         _gunObj = Instantiate(_gunPrefDict[GameProfile.GunId], _gunPoint.transform.position, Quaternion.identity);
         _gunObj.transform.SetParent(_parent.transform);
         _anim = GetComponent<Animator>();
-        _rightHandObj = _gunObj.GetComponent<GunModel>().RightHandObj;
-        _leftHandObj = _gunObj.GetComponent<GunModel>().LeftHandObj;
+        _gunModel = _gunObj.GetComponent<GunModel>();
+        _rightHandObj = _gunModel.RightHandObj;
+        _leftHandObj = _gunModel.LeftHandObj;
     }
 
     private void Update()
@@ -47,7 +49,8 @@ public class GunController : MonoBehaviour
                 if (hit.transform.gameObject.CompareTag("Zombie"))
                 {
                     //Debug.Log($"{hit.collider.name} - {hit.transform.gameObject.GetComponent<IZombie>().Health - 1}");
-                    hit.transform.gameObject.GetComponent<IZombie>().Health = 1;
+                    //hit.transform.gameObject.GetComponent<IZombie>().Health = 1;
+                    GameProfile.DamageForZombie.Value = new SubscriptionData(gameObject.name, hit.transform.gameObject.name, _gunModel.Damage);
                 }
             }
             else

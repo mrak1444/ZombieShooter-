@@ -8,15 +8,17 @@ public class PlayerModel : MonoBehaviour, IPlayer
     [SerializeField] private Transform _attackPoint;
 
     private Animator _anim;
+    private bool _playerDie = false;
 
-    public int Health 
-    { 
-        get => _health;
+    public int Health { get => _health; set => _health = value; }
+
+    public bool PlayerDie
+    {
+        get => _playerDie;
         set
         {
-             _health -= value;
-            Debug.Log(_health);
-            if(_health <= 0)
+            _playerDie = value;
+            if (_playerDie)
             {
                 _anim.SetBool("Death", true);
                 StartCoroutine(DeathZombie());
