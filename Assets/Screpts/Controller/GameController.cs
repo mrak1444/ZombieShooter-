@@ -7,8 +7,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject[] _zombiesGameObject;
     [SerializeField] private CheckpointModel _checkpointModel;
     [SerializeField] private UIControllerGame _uiController;
-    [SerializeField] private int _maxZombies = 20;
 
+    private int _maxZombies;
     private GameObject[] _playerGameObject;
     private UniteCheckpointController uniteCheckpointController;
     private FindPlayerController _findPlayerController;
@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        _maxZombies = GameProfile.MaxZombies;
+
         _playerGameObject = GameObject.FindGameObjectsWithTag("Player");
 
         _rndCheckpoint = new RndCheckpoint(_checkpointModel);
