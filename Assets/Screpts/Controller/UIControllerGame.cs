@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIControllerGame : MonoBehaviour
 {
@@ -11,8 +13,14 @@ public class UIControllerGame : MonoBehaviour
     [SerializeField] private GameObject _camera;
     [SerializeField] private GameObject _cameraPlayer;
     [SerializeField] private TMP_Text _infoEndGame;
+    [SerializeField] private Button QuitGameButton;
 
     private int _zombies;
+
+    private void Start()
+    {
+        QuitGameButton.onClick.AddListener(QuitGame);
+    }
 
     public void Run(int health, int zombies)
     {
@@ -47,5 +55,10 @@ public class UIControllerGame : MonoBehaviour
         _camera.SetActive(true);
         _cameraPlayer.SetActive(false);
         _infoEndGame.text = $"You kill {killZombies} zombies.";
+    }
+
+    private void QuitGame()
+    {
+        GameProfile.FlagGameOff.Value = true;
     }
 }

@@ -18,5 +18,7 @@ public static class GameProfile
     public static SubscriptionProperty<SubscriptionData> DamageForZombie = new SubscriptionProperty<SubscriptionData>();
 
     public static SubscriptionProperty<SubscriptionData> DamageForPlayer = new SubscriptionProperty<SubscriptionData>();
+
+    public static SubscriptionProperty<bool> FlagGameOff = new SubscriptionProperty<bool>();
     public static int MaxZombies { get => _maxZombies; set => _maxZombies = value; }
 }

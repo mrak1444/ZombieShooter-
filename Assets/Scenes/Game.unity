@@ -52200,6 +52200,7 @@ MonoBehaviour:
   _camera: {fileID: 657391299}
   _cameraPlayer: {fileID: 1681648760}
   _infoEndGame: {fileID: 918833598}
+  QuitGameButton: {fileID: 1315730650}
 --- !u!1001 &1712570448
 PrefabInstance:
   m_ObjectHideFlags: 0

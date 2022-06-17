@@ -57,6 +57,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     [Header("GameMode")]
     [SerializeField] private GameObject _gameMode;
+    [SerializeField] private GameObject _allAccount;
     [SerializeField] private Button _singleplayerGameModeButton;
     [SerializeField] private Button _multiplayerGameModeButton;
 
@@ -75,6 +76,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     private void Start()
     {
+        GameProfile.FlagGameOff.SubscribeOnChange(GameOff);
+
         //Account
         _signInAccountButton.onClick.AddListener(SignInAccountButton);
         _createAccountButton.onClick.AddListener(CreateAccountButton);
@@ -101,7 +104,18 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         _singleplayerGameModeButton.onClick.AddListener(SingleplayerGameModeButton);
     }
 
-    
+    private void GameOff(bool obj)
+    {
+        if (obj)
+        {
+            _playerInfo.SetActive(true);
+            _allAccount.SetActive(true);
+            //SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+            SceneManager.UnloadSceneAsync("Game");
+        }
+    }
+
+
 
     #region [Account]
     private void SignInAccountButton()
@@ -369,7 +383,11 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         GameProfile.GunDamage = _damageForBuy;
         GameProfile.GunRange = _rangeForBuy;
 
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game", LoadSceneMode.Additive);
+
+        _allAccount.SetActive(false);
+        _gameMode.SetActive(false);
+        GameProfile.FlagGameOff.Value = false;
     }
 
     #endregion
