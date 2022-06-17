@@ -16,4 +16,7 @@ public interface IZombie
     Transform AttackPoint { set; }
     void AttackWeightR(float weight);
     void AttackWeightL(float weight);
+    void Spawn(Vector3 spawnPoint);
+    void DisableZombie();
+    bool FalgAccessDeath { get; set; }
 }

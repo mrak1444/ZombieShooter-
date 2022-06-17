@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -34,6 +35,13 @@ public class UIControllerGame : MonoBehaviour
 
     public void EndGameKillZombie(int killZombies)
     {
+        StartCoroutine(EndGame(killZombies));
+        
+    }
+
+    IEnumerator EndGame(int killZombies)
+    {
+        yield return new WaitForSeconds(2f);
         Cursor.lockState = CursorLockMode.Confined;
         _endGamePanel.SetActive(true);
         _camera.SetActive(true);

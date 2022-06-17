@@ -7,6 +7,7 @@ public class ZombieModel : MonoBehaviour, IZombie
     [SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
 
+    private int _maxHealth;
     private Transform _attackPoint;
     private float _attackWeightR = 0;
     private float _attackWeightL = 0;
@@ -19,9 +20,11 @@ public class ZombieModel : MonoBehaviour, IZombie
     private bool _zombieDie = false;
     private bool _zombieRun = false;
     private bool _zombieAttack = false;
+    private bool _zombieActive = true;
+    private bool _falgAccessDeath = true;
 
 
-
+    public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value; }
     public Vector3 zombiePosition => transform.position;
     public NavMeshAgent navMeshUnite => _meshUnite;
     public Vector3 nextPosition { get => _nextPosition; set => _nextPosition = value; }
@@ -42,7 +45,6 @@ public class ZombieModel : MonoBehaviour, IZombie
             {
                 _anim.SetBool("Death", true);
                 StopUnite = true;
-                StartCoroutine(DeathZombie());
             }
         }
     }
@@ -88,6 +90,7 @@ public class ZombieModel : MonoBehaviour, IZombie
 
     private void Start()
     {
+        _maxHealth = _health;
         _meshUnite = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
         _meshUnite.updatePosition = false;
@@ -146,5 +149,33 @@ public class ZombieModel : MonoBehaviour, IZombie
                 _anim.SetIKRotation(AvatarIKGoal.LeftHand, _attackPoint.rotation);
             }
         }
+    }
+
+    public void Spawn(Vector3 spawnPoint)
+    {
+        
+        StartCoroutine(SpawnZombie(spawnPoint));
+    }
+
+    IEnumerator SpawnZombie(Vector3 spawnPoint)
+    {
+        
+        yield return new WaitForSeconds(5f);
+        _meshUnite.enabled = false;
+        transform.position = spawnPoint;
+        ZombieDie = false;
+        _anim.SetBool("Death", false);
+        _anim.SetBool("Move", true);
+        _health = _maxHealth;
+        _meshUnite.enabled = true;
+        StopUnite = false;
+        _nextPosition = _firstCheckpointTransform.position;
+        _meshUnite.destination = nextPosition;
+        FalgAccessDeath = true;
+    }
+
+    public void DisableZombie()
+    {
+        if(gameObject.activeSelf) StartCoroutine(DeathZombie());
     }
 }

@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class ObjectController
 {
+    private GameObject[] _spawnPoints;
     private Dictionary<string, IZombie> _zombie;
     private Dictionary<string, IPlayer> _player;
     private UIControllerGame _uiController;
     private int _killZombie = 0;
     private int _maxZombies;
+    private System.Random _rnd = new System.Random();
 
-    public ObjectController(Dictionary<string, IZombie> zombie, Dictionary<string, IPlayer> player, UIControllerGame uiController, int maxZombies)
+    public ObjectController(Dictionary<string, IZombie> zombie, Dictionary<string, IPlayer> player, 
+        UIControllerGame uiController, int maxZombies, GameObject[] spawnPoints)
     {
+        _spawnPoints = spawnPoints;
         _player = player;
         _zombie = zombie;
         _uiController = uiController;
@@ -49,6 +53,24 @@ public class ObjectController
         if(_killZombie == _maxZombies || _player["Swat"].PlayerDie)
         {
             _uiController.EndGameKillZombie(_killZombie);   //переделать на мультиплеер
+        }
+
+        foreach (var z in _zombie)
+        {
+            if (z.Value.ZombieDie && z.Value.FalgAccessDeath)
+            {
+                z.Value.FalgAccessDeath = false;
+
+                if ((_killZombie + _zombie.Count) <= _maxZombies)
+                {
+                    z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
+                }
+                else //if ((_killZombie + _zombie.Count) > _maxZombies)
+                {
+                    z.Value.DisableZombie();
+                }
+                
+            }
         }
     }
 }

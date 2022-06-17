@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject[] _zombiesGameObject;
     [SerializeField] private CheckpointModel _checkpointModel;
+    [SerializeField] private GameObject[] _spawnPoints;
     [SerializeField] private UIControllerGame _uiController;
 
     private int _maxZombies;
@@ -44,7 +45,7 @@ public class GameController : MonoBehaviour
 
         _uiController.Run(_player1["Swat"].Health, _maxZombies);
 
-        _objectController = new ObjectController(_zombie1, _player1, _uiController, _maxZombies);
+        _objectController = new ObjectController(_zombie1, _player1, _uiController, _maxZombies, _spawnPoints);
 
         Debug.Log($"Player name: {GameProfile.PlayerName}");
     }

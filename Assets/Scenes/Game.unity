@@ -4887,6 +4887,14 @@ MonoBehaviour:
   - {fileID: 4803014352952965227}
   - {fileID: 4803014351865044663}
   _checkpointModel: {fileID: 663772405}
+  _spawnPoints:
+  - {fileID: 1329071813}
+  - {fileID: 344842242}
+  - {fileID: 1363993977}
+  - {fileID: 519077138}
+  - {fileID: 579122945}
+  - {fileID: 1791633017}
+  - {fileID: 1652830178}
   _uiController: {fileID: 1712177802}
 --- !u!1001 &124367058
 PrefabInstance:
@@ -42704,7 +42712,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1363993977}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 114.04, y: 1.29, z: -3.78}
+  m_LocalPosition: {x: 109.62, y: 1.29, z: -3.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 170453531}
