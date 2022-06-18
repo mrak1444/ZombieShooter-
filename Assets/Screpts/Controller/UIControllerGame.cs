@@ -3,6 +3,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class UIControllerGame : MonoBehaviour
 {
@@ -54,7 +56,23 @@ public class UIControllerGame : MonoBehaviour
         _endGamePanel.SetActive(true);
         _camera.SetActive(true);
         _cameraPlayer.SetActive(false);
-        _infoEndGame.text = $"You kill {killZombies} zombies.";
+        _infoEndGame.text = $"You kill {killZombies} zombies.\nYou get {killZombies * 10} money.";
+
+        AddUserVirtualCurrencyRequest request = new AddUserVirtualCurrencyRequest()
+        {
+            VirtualCurrency = "GD",
+            Amount = killZombies * 10
+        };
+
+        PlayFabClientAPI.AddUserVirtualCurrency
+            (request,
+            result =>
+            {
+                Debug.Log(result);
+            }, error =>
+            {
+                Debug.LogError(error);
+            });
     }
 
     private void QuitGame()

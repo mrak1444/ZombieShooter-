@@ -9,9 +9,11 @@ public class ObjectController
     private Dictionary<string, IZombie> _zombie;
     private Dictionary<string, IPlayer> _player;
     private UIControllerGame _uiController;
-    private int _killZombie = 0;
+    private int _killZombieAll = 0;
+    private int _killZombiePlayer = 0;
     private int _maxZombies;
     private System.Random _rnd = new System.Random();
+    private bool _flagEndGame;
 
     public ObjectController(Dictionary<string, IZombie> zombie, Dictionary<string, IPlayer> player, 
         UIControllerGame uiController, int maxZombies, GameObject[] spawnPoints)
@@ -24,6 +26,8 @@ public class ObjectController
 
         GameProfile.DamageForPlayer.SubscribeOnChange(DamageForPlayer);
         GameProfile.DamageForZombie.SubscribeOnChange(DamageForZombie);
+
+        _flagEndGame = true;
     }
 
     private void DamageForZombie(SubscriptionData obj)
@@ -31,9 +35,14 @@ public class ObjectController
         _zombie[obj.ZombieId].Health -= obj.Damage;
         if(_zombie[obj.ZombieId].Health <= 0 && !_zombie[obj.ZombieId].ZombieDie)
         {
-            _killZombie += 1;
+            _killZombieAll += 1;
             _zombie[obj.ZombieId].ZombieDie = true;
-            _uiController.KillZombie(_killZombie);
+            _uiController.KillZombie(_killZombieAll);
+
+            if(obj.PlayerId == "Swat") // переделать под мультиплеер
+            {
+                _killZombiePlayer += 1;
+            }
         }
     }
 
@@ -50,9 +59,14 @@ public class ObjectController
 
     public void Checking()
     {
-        if(_killZombie == _maxZombies || _player["Swat"].PlayerDie)
+        if(_killZombieAll == _maxZombies || _player["Swat"].PlayerDie)
         {
-            _uiController.EndGameKillZombie(_killZombie);   //переделать на мультиплеер
+            if (_flagEndGame)
+            {
+                _flagEndGame = false;
+                _uiController.EndGameKillZombie(_killZombiePlayer);   //переделать на мультиплеер
+            }
+            
         }
 
         foreach (var z in _zombie)
@@ -61,7 +75,7 @@ public class ObjectController
             {
                 z.Value.FalgAccessDeath = false;
 
-                if ((_killZombie + _zombie.Count) <= _maxZombies)
+                if ((_killZombieAll + _zombie.Count) <= _maxZombies)
                 {
                     z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
                 }

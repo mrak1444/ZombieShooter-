@@ -108,6 +108,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     {
         if (obj)
         {
+            PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
+
             _playerInfo.SetActive(true);
             _allAccount.SetActive(true);
             //SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
