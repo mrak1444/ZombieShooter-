@@ -61,6 +61,11 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     [SerializeField] private Button _singleplayerGameModeButton;
     [SerializeField] private Button _multiplayerGameModeButton;
 
+    [Header("MultiplayerMenu")]
+    [SerializeField] private GameObject _multiplayerMenu;
+    [SerializeField] private Button _createRoomeMultiplayerMenuButton;
+    [SerializeField] private Button _backMultiplayerMenuButton;
+
     private readonly Dictionary<string, CatalogItem> _catalog = new Dictionary<string, CatalogItem>();
     private Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
     private List<ItemInstance> _inventoryList = new List<ItemInstance>();
@@ -102,6 +107,11 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
         //GameMode
         _singleplayerGameModeButton.onClick.AddListener(SingleplayerGameModeButton);
+        _multiplayerGameModeButton.onClick.AddListener(MultiplayerGameModeButton);
+
+        //MultiplayerMenu
+        _createRoomeMultiplayerMenuButton.onClick.AddListener(CreateRoomeMultiplayerMenuButton);
+        _backMultiplayerMenuButton.onClick.AddListener(BackMultiplayerMenuButton);
     }
 
     private void GameOff(bool obj)
@@ -392,9 +402,27 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         GameProfile.FlagGameOff.Value = false;
     }
 
+    private void MultiplayerGameModeButton()
+    {
+        _gameMode.SetActive(false);
+        _multiplayerMenu.SetActive(true);
+        StartPhotoneServer(_namePlayerPlayerInfoTxt.text);
+    }
+
     #endregion
 
-    #region [Photone Start]
+    #region [Multiplayer Menu]
+
+    private void BackMultiplayerMenuButton()
+    {
+        _multiplayerMenu.SetActive(false);
+        _playerInfo.SetActive(true);
+    }
+
+    private void CreateRoomeMultiplayerMenuButton()
+    {
+        PhotonNetwork.CreateRoom(_namePlayerPlayerInfoTxt.text);  //дописать
+    }
 
     private void StartPhotoneServer(string PlayerName)
     {
@@ -408,6 +436,28 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     {
         Debug.Log("Photone! OnConnectedToMaster");
         _connectedToPhotone = true;
+        PhotonNetwork.JoinLobby(_customLobby);
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("JoinedLobby");
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        //base.OnRoomListUpdate(roomList);
+        Debug.Log($"RoomListUpdate ({roomList.Count})");
+    }
+
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("CreatedRoom");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("JoinedRoom");
     }
 
     #endregion
