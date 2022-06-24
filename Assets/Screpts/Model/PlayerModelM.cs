@@ -1,7 +1,9 @@
+using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerModel : MonoBehaviour, IPlayer
+public class PlayerModelM : MonoBehaviourPun, IPlayer
 {
     [SerializeField] private int _health = 20;
     [SerializeField] private Transform _attackPoint;
@@ -31,12 +33,13 @@ public class PlayerModel : MonoBehaviour, IPlayer
 
     public Transform AttackPoint => _attackPoint;
 
-    public bool PlayerIsMine => false;
+    public bool PlayerIsMine => _playerIsMine;
 
     public int NumberKilledZombie { get => _numberKilledZombie; set => _numberKilledZombie = value; }
 
     private void Start()
     {
+        _playerIsMine = photonView.IsMine;
         _anim = GetComponent<Animator>();
     }
 

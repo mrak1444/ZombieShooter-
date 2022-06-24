@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieModel : MonoBehaviour, IZombie
+public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 {
     [SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
@@ -22,86 +23,70 @@ public class ZombieModel : MonoBehaviour, IZombie
     private bool _zombieAttack = false;
     private bool _zombieActive = true;
     private bool _falgAccessDeath = true;
+    private Vector3 _zombiePosition;
+    private int _numberKilledZombie;
 
 
     public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value; }
-    public Vector3 zombiePosition => transform.position;
-    public NavMeshAgent navMeshUnite => _meshUnite;
-    public Vector3 nextPosition { get => _nextPosition; set => _nextPosition = value; }
+    public Vector3 ZombiePosition => _zombiePosition;
+    public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
     public int Health { get => _health; set => _health = value; }
-
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
-
     public Vector3 zombieForward => transform.forward;
-
-    public bool ZombieDie 
-    { 
-        get => _zombieDie;
-        set
-        { 
-            _zombieDie = value;
-            if (_zombieDie)
-            {
-                _anim.SetBool("Death", true);
-                StopUnite = true;
-            }
-        }
-    }
-
-    public bool ZombieRun 
-    { 
-        get => _zombieRun;
-        set
-        {
-            _zombieRun = value;
-            if (_zombieRun)
-            {
-                _anim.SetBool("Run", true);
-                _meshUnite.speed = 3f;
-            }
-            else
-            {
-                _anim.SetBool("Run", false);
-                _meshUnite.speed = 1f;
-            }
-        }
-    }
-    public bool ZombieAttack 
-    { 
-        get => _zombieAttack;
-        set
-        {
-            _zombieAttack = value;
-            if (_zombieAttack)
-            {
-                _anim.SetLayerWeight(1, 1);
-                _anim.SetBool("Attack", true);
-            }
-            else
-            {
-                _anim.SetLayerWeight(1, 0);
-                _anim.SetBool("Attack", false);
-            }
-        }
-    }
-
+    public bool ZombieDie { get => _zombieDie; set => _zombieDie = value; }
+    public bool ZombieRun { get => _zombieRun; set => _zombieRun = value; }
+    public bool ZombieAttack { get => _zombieAttack; set => _zombieAttack = value; }
     public Transform AttackPoint { set => _attackPoint = value; }
 
     private void Start()
     {
+        _zombiePosition = transform.position;
         _maxHealth = _health;
         _meshUnite = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
         _meshUnite.updatePosition = false;
         _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.destination = nextPosition;
+        _meshUnite.destination = NextPosition;
         _meshUnite.isStopped = false;
         _anim.SetBool("Move", true);
     }
 
     private void Update()
     {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _meshUnite.destination = NextPosition;
+        }
+
+        if (_zombieRun)
+        {
+            _anim.SetBool("Run", true);
+            _meshUnite.speed = 3f;
+        }
+        else
+        {
+            _anim.SetBool("Run", false);
+            _meshUnite.speed = 1f;
+        }
+
+        if (_zombieAttack)
+        {
+            _anim.SetLayerWeight(1, 1);
+            _anim.SetBool("Attack", true);
+        }
+        else
+        {
+            _anim.SetLayerWeight(1, 0);
+            _anim.SetBool("Attack", false);
+        }
+
+        if (_zombieDie)
+        {
+            _anim.SetBool("Death", true);
+            StopUnite = true;
+        }
+
         if (!_meshUnite.isStopped)
         {
             _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
@@ -114,6 +99,7 @@ public class ZombieModel : MonoBehaviour, IZombie
     IEnumerator DeathZombie()
     {
         yield return new WaitForSeconds(5f);
+        ZombieDie = false;
         gameObject.SetActive(false);
     }
 
@@ -170,12 +156,28 @@ public class ZombieModel : MonoBehaviour, IZombie
         _meshUnite.enabled = true;
         StopUnite = false;
         _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.destination = nextPosition;
+        _meshUnite.destination = NextPosition;
         FalgAccessDeath = true;
     }
 
     public void DisableZombie()
     {
         if(gameObject.activeSelf) StartCoroutine(DeathZombie());
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(_health);
+            stream.SendNext(_zombieDie);
+            
+        }
+        else
+        {
+            this._health = (int)stream.ReceiveNext();
+            this._zombieDie = (bool)stream.ReceiveNext();
+            
+        }
     }
 }

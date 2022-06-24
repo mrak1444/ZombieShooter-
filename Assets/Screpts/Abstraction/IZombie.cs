@@ -4,9 +4,8 @@ using UnityEngine.AI;
 public interface IZombie
 {
     Vector3 zombieForward { get; }
-    Vector3 zombiePosition { get; }
-    NavMeshAgent navMeshUnite { get; }
-    Vector3 nextPosition { get; set; }
+    Vector3 ZombiePosition { get; }
+    Vector3 NextPosition { get; set; }
     bool StopUnite { set; }
     bool StopUniteCheckpointController { get;  set; }
     bool ZombieDie { get; set; }

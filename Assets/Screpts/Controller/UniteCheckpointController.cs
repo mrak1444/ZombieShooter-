@@ -24,10 +24,10 @@ public class UniteCheckpointController
         {
             if (zombie.StopUniteCheckpointController)
             {
-                if (zombie.zombiePosition.x >= zombie.nextPosition.x - 1 && zombie.zombiePosition.x <= zombie.nextPosition.x + 1 && zombie.zombiePosition.z >= zombie.nextPosition.z - 1 && zombie.zombiePosition.z <= zombie.nextPosition.z + 1)
+                if (zombie.ZombiePosition.x >= zombie.NextPosition.x - 1 && zombie.ZombiePosition.x <= zombie.NextPosition.x + 1 && zombie.ZombiePosition.z >= zombie.NextPosition.z - 1 && zombie.ZombiePosition.z <= zombie.NextPosition.z + 1)
                 {
-                    zombie.nextPosition = _rndCheckpoint.RND().position;
-                    zombie.navMeshUnite.destination = zombie.nextPosition;
+                    zombie.NextPosition = _rndCheckpoint.RND().position;
+                    //zombie.navMeshUnite.destination = zombie.NextPosition;
                 }
             }
         }

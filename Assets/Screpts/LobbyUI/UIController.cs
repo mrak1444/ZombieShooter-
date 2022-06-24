@@ -65,6 +65,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     [SerializeField] private GameObject _multiplayerMenu;
     [SerializeField] private Button _createRoomeMultiplayerMenuButton;
     [SerializeField] private Button _backMultiplayerMenuButton;
+    [SerializeField] private TMP_Text[] _buttonsRoomsTxt;
+    [SerializeField] private Button[] _buttonsRooms;
 
     private readonly Dictionary<string, CatalogItem> _catalog = new Dictionary<string, CatalogItem>();
     private Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
@@ -394,6 +396,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         GameProfile.GunId = _itemIdForBuy;
         GameProfile.GunDamage = _damageForBuy;
         GameProfile.GunRange = _rangeForBuy;
+        GameProfile.GameMode = GameMode.Singeplayer;
 
         SceneManager.LoadScene("Game", LoadSceneMode.Additive);
 
@@ -404,9 +407,14 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     private void MultiplayerGameModeButton()
     {
+        GameProfile.GunId = _itemIdForBuy;
+        GameProfile.GunDamage = _damageForBuy;
+        GameProfile.GunRange = _rangeForBuy;
+        GameProfile.GameMode = GameMode.Multiplayer;
         _gameMode.SetActive(false);
         _multiplayerMenu.SetActive(true);
         StartPhotoneServer(_namePlayerPlayerInfoTxt.text);
+        
     }
 
     #endregion
@@ -446,8 +454,21 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        //base.OnRoomListUpdate(roomList);
         Debug.Log($"RoomListUpdate ({roomList.Count})");
+        if(roomList.Count != 0)
+        {
+            for (int i = 0; i < _buttonsRoomsTxt.Length; i++)
+            {
+                _buttonsRoomsTxt[i].text = roomList[i].Name;
+                var n = roomList[i].Name;
+                _buttonsRooms[i].onClick.AddListener(delegate { ClickButtonsJoinRoom((string)n); });
+            }
+        }
+    }
+
+    private void ClickButtonsJoinRoom(string name)
+    {
+        PhotonNetwork.JoinRoom(name);
     }
 
     public override void OnCreatedRoom()
@@ -458,6 +479,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     public override void OnJoinedRoom()
     {
         Debug.Log("JoinedRoom");
+        PhotonNetwork.LoadLevel("Game");
     }
 
     #endregion

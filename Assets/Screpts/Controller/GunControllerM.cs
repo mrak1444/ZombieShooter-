@@ -1,7 +1,9 @@
+using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunController : MonoBehaviour
+public class GunControllerM : MonoBehaviourPun
 {
     [SerializeField] private LayerMask _layermask;
     [SerializeField] private GameObject[] _gunPref;
@@ -9,7 +11,7 @@ public class GunController : MonoBehaviour
     [SerializeField] private GameObject _gunPoint;
     [SerializeField] private GameObject _lookPoint;
     [SerializeField] private Camera _cam;
-
+    
 
     private GameObject _gunObj;
     private GunModel _gunModel;
@@ -21,10 +23,17 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
+        if (!photonView.IsMine) _cam.gameObject.SetActive(false);
+
         foreach (var item in _gunPref)
         {
             _gunPrefDict.Add(item.name, item);
         }
+
+        /*for (int i = 0; i < _gunPref.Length; i++)
+        {
+            _gunPrefDict.Add(_gunPref[i].name, _gunPref[i]);
+        }*/
 
         _gunObj = Instantiate(_gunPrefDict[GameProfile.GunId], _gunPoint.transform.position, Quaternion.identity);
         _gunObj.transform.SetParent(_parent.transform);
@@ -36,7 +45,10 @@ public class GunController : MonoBehaviour
 
     private void Update()
     {
-        Fire();
+        if (photonView.IsMine)
+        {
+            this.Fire();
+        }
 
         _gunObj.transform.LookAt(_lookPoint.transform);
     }

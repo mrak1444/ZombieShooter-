@@ -26,28 +26,29 @@ public class FindPlayerController
         {
             foreach (var player in _player)
             {
-                var vecPZ = player.PlayerPosition - zombie.zombiePosition;
+                var vecPZ = player.PlayerPosition - zombie.ZombiePosition;
 
                 if (!zombie.ZombieDie)
                 {
-                    if (Vector3.Angle(vecPZ, zombie.zombieForward) <= 45f)
+                    if (Vector3.Angle(vecPZ, zombie.zombieForward) <= 50f)
                     {
-                        if (Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) < 30f && Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) > 2f)
+                        if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 40f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 2f)
                         {
                             zombie.StopUniteCheckpointController = true;
-                            zombie.navMeshUnite.destination = player.PlayerPosition;
+                            //zombie.navMeshUnite.destination = player.PlayerPosition;
+                            zombie.NextPosition = player.PlayerPosition;
                             zombie.ZombieRun = true;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
                             zombie.AttackPoint = null;
                         }
-                        else if(Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) <= 2f && Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) > 1f)
+                        else if(Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) <= 2f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 1f)
                         {
                             zombie.ZombieAttack = true;
                             zombie.StopUnite = false;
                             zombie.AttackPoint = player.AttackPoint;
                         }
-                        else if(Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) <= 1f)
+                        else if(Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) <= 1f)
                         {
                             zombie.StopUnite = true;
                             zombie.ZombieRun = false;
@@ -56,7 +57,8 @@ public class FindPlayerController
                         else
                         {
                             zombie.StopUniteCheckpointController = false;
-                            zombie.navMeshUnite.destination = zombie.nextPosition;
+                            //zombie.navMeshUnite.destination = zombie.NextPosition;
+                            zombie.NextPosition = player.PlayerPosition;
                             zombie.ZombieRun = false;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
@@ -65,10 +67,11 @@ public class FindPlayerController
                     }
                     else
                     {
-                        if (Vector3.Distance(zombie.zombiePosition, player.PlayerPosition) < 5f)
+                        if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 5f)
                         {
                             zombie.StopUniteCheckpointController = true;
-                            zombie.navMeshUnite.destination = player.PlayerPosition;
+                            //zombie.navMeshUnite.destination = player.PlayerPosition;
+                            zombie.NextPosition = player.PlayerPosition;
                             zombie.ZombieRun = true;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
@@ -77,7 +80,8 @@ public class FindPlayerController
                         else
                         {
                             zombie.StopUniteCheckpointController = false;
-                            zombie.navMeshUnite.destination = zombie.nextPosition;
+                            //zombie.navMeshUnite.destination = zombie.NextPosition;
+                            zombie.NextPosition = player.PlayerPosition;
                             zombie.ZombieAttack = false;
                             zombie.StopUnite = false;
                             zombie.ZombieRun = false;

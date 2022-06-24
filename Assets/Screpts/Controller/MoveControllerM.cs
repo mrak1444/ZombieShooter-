@@ -1,6 +1,9 @@
+using Photon.Pun;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveController : MonoBehaviour
+public class MoveControllerM : MonoBehaviourPun
 {
     [SerializeField] private Camera cam;
     [SerializeField] private GameObject _gunPoint;
@@ -30,13 +33,19 @@ public class MoveController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
-        Rotation();
+        if (photonView.IsMine)
+        {
+            Move();
+            Rotation();
+        }
     }
 
     private void Update()
     {
-        Jump();
+        if (photonView.IsMine)
+        {
+            Jump();
+        }
     }
 
     private void Move()

@@ -14,10 +14,12 @@ public class ObjectController
     private int _maxZombies;
     private System.Random _rnd = new System.Random();
     private bool _flagEndGame;
+    private string _name;
 
-    public ObjectController(Dictionary<string, IZombie> zombie, Dictionary<string, IPlayer> player, 
+    public ObjectController(string name, Dictionary<string, IZombie> zombie, Dictionary<string, IPlayer> player, 
         UIControllerGame uiController, int maxZombies, GameObject[] spawnPoints)
     {
+        _name = name;
         _spawnPoints = spawnPoints;
         _player = player;
         _zombie = zombie;
@@ -35,14 +37,10 @@ public class ObjectController
         _zombie[obj.ZombieId].Health -= obj.Damage;
         if(_zombie[obj.ZombieId].Health <= 0 && !_zombie[obj.ZombieId].ZombieDie)
         {
-            _killZombieAll += 1;
+            _killZombiePlayer += 1;
+            _player[obj.PlayerId].NumberKilledZombie += 1;
             _zombie[obj.ZombieId].ZombieDie = true;
-            _uiController.KillZombie(_killZombieAll);
-
-            if(obj.PlayerId == "Swat") // переделать под мультиплеер
-            {
-                _killZombiePlayer += 1;
-            }
+            _uiController.KillZombie(_killZombiePlayer);
         }
     }
 
@@ -59,7 +57,14 @@ public class ObjectController
 
     public void Checking()
     {
-        if(_killZombieAll == _maxZombies || _player["Swat"].PlayerDie)
+        _killZombieAll = 0;
+
+        foreach (var p in _player)
+        {
+            _killZombieAll += p.Value.NumberKilledZombie;
+        }
+
+        if(_killZombieAll == _maxZombies || _player[_name].PlayerDie)
         {
             if (_flagEndGame)
             {

@@ -1,9 +1,14 @@
+using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject _singlePlayer;
+    [SerializeField] private GameObject _multyPlayer;
+    [SerializeField] private Transform _spawnPlayer;
     [SerializeField] private GameObject[] _zombiesGameObject;
     [SerializeField] private CheckpointModel _checkpointModel;
     [SerializeField] private GameObject[] _spawnPoints;
@@ -22,9 +27,21 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log($"{GameProfile.GunId} - {GameProfile.PlayerName}");
+
+        Cursor.lockState = CursorLockMode.Locked;
+        if (GameProfile.GameMode == GameMode.Singeplayer) SingeplayerStart();
+        else if (GameProfile.GameMode == GameMode.Multiplayer) MultiplayerStart();
+        else Debug.LogError("Error GameMode");
+    }
+
+    private void SingeplayerStart()
+    {
         _maxZombies = GameProfile.MaxZombies;
 
-        _playerGameObject = GameObject.FindGameObjectsWithTag("Player");
+        //_playerGameObject = GameObject.FindGameObjectsWithTag("Player");
+        _playerGameObject = new GameObject[1];
+        _playerGameObject[0] = Instantiate(_singlePlayer, _spawnPlayer.position, Quaternion.identity);
 
         _rndCheckpoint = new RndCheckpoint(_checkpointModel);
 
@@ -43,9 +60,46 @@ public class GameController : MonoBehaviour
             _player1.Add(player.name, player.GetComponent<IPlayer>());
         }
 
-        _uiController.Run(_player1["Swat"].Health, _maxZombies);
+        _uiController.Run(_player1[_playerGameObject[0].name].Health, _maxZombies);
 
-        _objectController = new ObjectController(_zombie1, _player1, _uiController, _maxZombies, _spawnPoints);
+        _objectController = new ObjectController(_playerGameObject[0].name, _zombie1, _player1, _uiController, _maxZombies, _spawnPoints);
+
+        Debug.Log($"Player name: {GameProfile.PlayerName}");
+    }
+
+    private void MultiplayerStart()
+    {
+        _maxZombies = GameProfile.MaxZombies;
+
+        //_playerGameObject = GameObject.FindGameObjectsWithTag("Player");
+        var p = PhotonNetwork.Instantiate(_multyPlayer.name, _spawnPlayer.position, Quaternion.identity);
+        p.name = GameProfile.PlayerName;
+        _player.Add(p.GetComponent<IPlayer>());
+        _player1.Add(p.name, p.GetComponent<IPlayer>());
+
+        //_playerGameObject[0] = p;
+        //_playerGameObject[0].name = GameProfile.PlayerName;
+
+        _rndCheckpoint = new RndCheckpoint(_checkpointModel);
+
+        uniteCheckpointController = new UniteCheckpointController(_zombie, _rndCheckpoint);
+        _findPlayerController = new FindPlayerController(_player, _zombie, _rndCheckpoint);
+
+        foreach (var zombie in _zombiesGameObject)
+        {
+            _zombie.Add(zombie.GetComponent<IZombie>());
+            _zombie1.Add(zombie.name, zombie.GetComponent<IZombie>());
+        }
+
+        /*foreach (var player in _playerGameObject)
+        {
+            _player.Add(player.GetComponent<IPlayer>());
+            _player1.Add(player.name, player.GetComponent<IPlayer>());
+        }*/
+
+        _uiController.Run(_player1[p.name].Health, _maxZombies);
+
+        _objectController = new ObjectController(p.name, _zombie1, _player1, _uiController, _maxZombies, _spawnPoints);
 
         Debug.Log($"Player name: {GameProfile.PlayerName}");
     }
