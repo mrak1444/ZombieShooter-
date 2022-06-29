@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerModelM : MonoBehaviourPun, IPlayer
+public class PlayerModelM : MonoBehaviourPunCallbacks, IPlayer
 {
     [SerializeField] private int _health = 20;
     [SerializeField] private Transform _attackPoint;
 
+    private PhotonView _photonView;
     private Animator _anim;
     private bool _playerDie = false;
     private bool _playerIsMine;
@@ -35,10 +36,18 @@ public class PlayerModelM : MonoBehaviourPun, IPlayer
 
     public bool PlayerIsMine => _playerIsMine;
 
-    public int NumberKilledZombie { get => _numberKilledZombie; set => _numberKilledZombie = value; }
+    public int NumberKilledZombie { get => _numberKilledZombie; set => _photonView.RPC("NumberKilledZombieMulti", RpcTarget.All, value); }
+
+    [PunRPC]
+    private void NumberKilledZombieMulti(int numberKilledZombie) 
+    {
+        _numberKilledZombie = numberKilledZombie;
+    }
 
     private void Start()
     {
+        _photonView = PhotonView.Get(this);
+        gameObject.name = this.photonView.Owner.NickName;
         _playerIsMine = photonView.IsMine;
         _anim = GetComponent<Animator>();
     }

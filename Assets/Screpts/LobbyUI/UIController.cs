@@ -68,6 +68,14 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     [SerializeField] private TMP_Text[] _buttonsRoomsTxt;
     [SerializeField] private Button[] _buttonsRooms;
 
+    [Header("MultiplayerStartGame")]
+    [SerializeField] private GameObject _multiplayerStartGame;
+    [SerializeField] private TMP_Text[] _playersTxtMultiplayerStartGame;
+    [SerializeField] private Button[] _PlayersButtonsMultiplayerStartGame;
+    [SerializeField] private Button _startGameMultiplayerStartGameButton;
+    [SerializeField] private GameObject _waitInfoMultiplayerStartGame;
+
+    private PhotonView _photonView;
     private readonly Dictionary<string, CatalogItem> _catalog = new Dictionary<string, CatalogItem>();
     private Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
     private List<ItemInstance> _inventoryList = new List<ItemInstance>();
@@ -79,10 +87,13 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     private bool _connectedToPhotone = false;
     private RoomOptions _roomOptions = new RoomOptions();
     private TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
+    private List<Player> _players = new List<Player>();
 
 
     private void Start()
     {
+        _photonView = PhotonView.Get(this);
+
         GameProfile.FlagGameOff.SubscribeOnChange(GameOff);
 
         //Account
@@ -114,6 +125,9 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         //MultiplayerMenu
         _createRoomeMultiplayerMenuButton.onClick.AddListener(CreateRoomeMultiplayerMenuButton);
         _backMultiplayerMenuButton.onClick.AddListener(BackMultiplayerMenuButton);
+
+        //MultiplayerStartGame
+        _startGameMultiplayerStartGameButton.onClick.AddListener(StartGameMultiplayerStartGameButton);
     }
 
     private void GameOff(bool obj)
@@ -459,9 +473,12 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         {
             for (int i = 0; i < _buttonsRoomsTxt.Length; i++)
             {
-                _buttonsRoomsTxt[i].text = roomList[i].Name;
-                var n = roomList[i].Name;
-                _buttonsRooms[i].onClick.AddListener(delegate { ClickButtonsJoinRoom((string)n); });
+                if(roomList.Count > i)
+                {
+                    _buttonsRoomsTxt[i].text = roomList[i].Name;
+                    var n = roomList[i].Name;
+                    _buttonsRooms[i].onClick.AddListener(delegate { ClickButtonsJoinRoom((string)n); });
+                }
             }
         }
     }
@@ -479,6 +496,58 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     public override void OnJoinedRoom()
     {
         Debug.Log("JoinedRoom");
+        //PhotonNetwork.LoadLevel("Game");  //переделать как раньше
+
+
+        _multiplayerMenu.SetActive(false);
+        _multiplayerStartGame.SetActive(true);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _startGameMultiplayerStartGameButton.gameObject.SetActive(true);
+            _waitInfoMultiplayerStartGame.SetActive(false);
+        }
+        else
+        {
+            _startGameMultiplayerStartGameButton.gameObject.SetActive(false);
+            _waitInfoMultiplayerStartGame.SetActive(true);
+        }
+    }
+
+    #endregion
+
+    #region [Multiplayer StartGame]
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        _players.Add(newPlayer);
+
+        if (_players.Count != 0)
+        {
+            for (int i = 0; i < _PlayersButtonsMultiplayerStartGame.Length; i++)
+            {
+                _playersTxtMultiplayerStartGame[i].text = _players[i].NickName;
+            }
+        }
+    }
+
+    private void StartGameMultiplayerStartGameButton()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //PhotonNetwork.LoadLevel("Game");
+            
+            GameProfile.Players = _players.Count;
+
+            _photonView.RPC("StartGame", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void StartGame()
+    {
         PhotonNetwork.LoadLevel("Game");
     }
 

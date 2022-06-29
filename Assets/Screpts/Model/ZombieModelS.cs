@@ -3,11 +3,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
+public class ZombieModelS : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 {
     [SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
 
+    private PhotonView _photonView;
     private int _maxHealth;
     private Transform _attackPoint;
     private float _attackWeightR = 0;
@@ -26,8 +27,8 @@ public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private Vector3 _zombiePosition;
     private int _numberKilledZombie;
 
-
-    public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value; }
+    #region PropertiesModel
+    public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value;}
     public Vector3 ZombiePosition => _zombiePosition;
     public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
@@ -39,17 +40,29 @@ public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     public bool ZombieAttack { get => _zombieAttack; set => _zombieAttack = value; }
     public Transform AttackPoint { set => _attackPoint = value; }
 
+    #endregion
+
     private void Start()
     {
+        _photonView = PhotonView.Get(this);
+
         _zombiePosition = transform.position;
         _maxHealth = _health;
-        _meshUnite = GetComponent<NavMeshAgent>();
+        
         _anim = GetComponent<Animator>();
-        _meshUnite.updatePosition = false;
+        
         _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.destination = NextPosition;
-        _meshUnite.isStopped = false;
+        //_meshUnite.destination = NextPosition;
+        
         _anim.SetBool("Move", true);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _meshUnite = GetComponent<NavMeshAgent>();
+            _meshUnite.updatePosition = false;
+            _meshUnite.destination = NextPosition;
+            _meshUnite.isStopped = false;
+        }
     }
 
     private void Update()
@@ -62,12 +75,12 @@ public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
         if (_zombieRun)
         {
             _anim.SetBool("Run", true);
-            _meshUnite.speed = 3f;
+            if (PhotonNetwork.IsMasterClient) _meshUnite.speed = 3f;
         }
         else
         {
             _anim.SetBool("Run", false);
-            _meshUnite.speed = 1f;
+            if (PhotonNetwork.IsMasterClient) _meshUnite.speed = 1f;
         }
 
         if (_zombieAttack)
@@ -86,26 +99,29 @@ public class ZombieModel : MonoBehaviourPunCallbacks, IZombie, IPunObservable
             _anim.SetBool("Death", true);
             StopUnite = true;
         }
-
-        if (!_meshUnite.isStopped)
+        if (PhotonNetwork.IsMasterClient)
         {
-            _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
-            var num = Vector3.Dot(transform.forward, _worldDeltaPosition);
-            _shouldMove = (num > 0 ? 1 : 0) > 0 && _meshUnite.remainingDistance > _meshUnite.radius && !_zombieAttack && !_zombieDie && !_zombieRun;
-            _anim.SetBool("Move", _shouldMove);
+            if (!_meshUnite.isStopped)
+            {
+                _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
+                var num = Vector3.Dot(transform.forward, _worldDeltaPosition);
+                _shouldMove = (num > 0 ? 1 : 0) > 0 && _meshUnite.remainingDistance > _meshUnite.radius && !_zombieAttack && !_zombieDie && !_zombieRun;
+                _anim.SetBool("Move", _shouldMove);
+            }
         }
+        
     }
 
     IEnumerator DeathZombie()
     {
         yield return new WaitForSeconds(5f);
-        ZombieDie = false;
+        //ZombieDie = false;
         gameObject.SetActive(false);
     }
 
     private void OnAnimatorMove()
     {
-        transform.position = _meshUnite.nextPosition;
+        if (PhotonNetwork.IsMasterClient) transform.position = _meshUnite.nextPosition;
     }
 
     public void AttackWeightR(float weight)

@@ -21,7 +21,7 @@ public class GunControllerM : MonoBehaviourPun
     private Dictionary<string, GameObject> _gunPrefDict = new Dictionary<string, GameObject>();
     private bool _flagFire = false;
 
-    void Start()
+    private void Start()
     {
         if (!photonView.IsMine) _cam.gameObject.SetActive(false);
 

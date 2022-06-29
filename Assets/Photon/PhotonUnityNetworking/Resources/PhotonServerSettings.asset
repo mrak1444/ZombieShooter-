@@ -39,6 +39,17 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - StartGame
+  - FalgAccessDeathMulti
+  - AttackPointMulti
+  - HealthMulti
+  - NextPositionMulti
+  - StopUniteCheckpointControllerMulti
+  - StopUniteMulti
+  - ZombieAttackMulti
+  - ZombieDieMulti
+  - ZombieRunMulti
+  - NumberKilledZombieMulti
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

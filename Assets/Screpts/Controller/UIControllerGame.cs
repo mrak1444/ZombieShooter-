@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
+using Photon.Pun;
 
 public class UIControllerGame : MonoBehaviour
 {

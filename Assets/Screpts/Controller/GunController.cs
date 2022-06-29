@@ -1,7 +1,8 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunController : MonoBehaviour
+public class GunController : MonoBehaviourPunCallbacks
 {
     [SerializeField] private LayerMask _layermask;
     [SerializeField] private GameObject[] _gunPref;
@@ -19,7 +20,7 @@ public class GunController : MonoBehaviour
     private Dictionary<string, GameObject> _gunPrefDict = new Dictionary<string, GameObject>();
     private bool _flagFire = false;
 
-    void Start()
+    private void Start()
     {
         foreach (var item in _gunPref)
         {
