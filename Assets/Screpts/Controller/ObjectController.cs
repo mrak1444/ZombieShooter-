@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,21 +75,24 @@ public class ObjectController
             
         }
 
-        foreach (var z in _zombie)
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (z.Value.ZombieDie && z.Value.FalgAccessDeath)
+            foreach (var z in _zombie)
             {
-                z.Value.FalgAccessDeath = false;
+                if (z.Value.ZombieDie && z.Value.FalgAccessDeath)
+                {
+                    z.Value.FalgAccessDeath = false;
 
-                if ((_killZombieAll + _zombie.Count) <= _maxZombies)
-                {
-                    z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
+                    if ((_killZombieAll + _zombie.Count) <= _maxZombies)
+                    {
+                        z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
+                    }
+                    else //if ((_killZombie + _zombie.Count) > _maxZombies)
+                    {
+                        z.Value.DisableZombie();
+                    }
+
                 }
-                else //if ((_killZombie + _zombie.Count) > _maxZombies)
-                {
-                    z.Value.DisableZombie();
-                }
-                
             }
         }
     }

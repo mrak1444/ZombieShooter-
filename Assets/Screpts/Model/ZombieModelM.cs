@@ -177,7 +177,12 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 
     public void Spawn(Vector3 spawnPoint)
     {
+        _photonView.RPC("Spawn2", RpcTarget.All, spawnPoint);
+    }
 
+    [PunRPC]
+    private void Spawn2(Vector3 spawnPoint)
+    {
         StartCoroutine(SpawnZombie(spawnPoint));
     }
 
@@ -199,6 +204,13 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     }
 
     public void DisableZombie()
+    {
+        _photonView.RPC("DisableZombie2", RpcTarget.All);
+        
+    }
+
+    [PunRPC]
+    private void DisableZombie2()
     {
         if (gameObject.activeSelf) StartCoroutine(DeathZombie());
     }
