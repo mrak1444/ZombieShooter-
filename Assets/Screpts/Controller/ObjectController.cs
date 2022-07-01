@@ -1,6 +1,4 @@
 using Photon.Pun;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,24 +73,33 @@ public class ObjectController
             
         }
 
-        if (PhotonNetwork.IsMasterClient)
+        if (GameProfile.GameMode == GameMode.Multiplayer)
         {
-            foreach (var z in _zombie)
+            if (PhotonNetwork.IsMasterClient) CheckingDeath();
+        }
+        else
+        {
+            CheckingDeath();
+        }
+    }
+
+    private void CheckingDeath()
+    {
+        foreach (var z in _zombie)
+        {
+            if (z.Value.ZombieDie && z.Value.FalgAccessDeath)
             {
-                if (z.Value.ZombieDie && z.Value.FalgAccessDeath)
+                z.Value.FalgAccessDeath = false;
+
+                if ((_killZombieAll + _zombie.Count) <= _maxZombies)
                 {
-                    z.Value.FalgAccessDeath = false;
-
-                    if ((_killZombieAll + _zombie.Count) <= _maxZombies)
-                    {
-                        z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
-                    }
-                    else //if ((_killZombie + _zombie.Count) > _maxZombies)
-                    {
-                        z.Value.DisableZombie();
-                    }
-
+                    z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
                 }
+                else //if ((_killZombie + _zombie.Count) > _maxZombies)
+                {
+                    z.Value.DisableZombie();
+                }
+
             }
         }
     }

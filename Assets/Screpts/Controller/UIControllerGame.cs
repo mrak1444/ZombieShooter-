@@ -79,5 +79,6 @@ public class UIControllerGame : MonoBehaviour
     private void QuitGame()
     {
         GameProfile.FlagGameOff.Value = true;
+        if (GameProfile.GameMode == GameMode.Multiplayer) PhotonNetwork.LeaveRoom();  // проверить на работаспособность
     }
 }

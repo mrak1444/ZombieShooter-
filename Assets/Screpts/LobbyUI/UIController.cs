@@ -88,6 +88,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     private RoomOptions _roomOptions = new RoomOptions();
     private TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
     private List<Player> _players = new List<Player>();
+    private List<RoomInfo> _roomList = new List<RoomInfo>();
 
 
     private void Start()
@@ -443,7 +444,28 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     private void CreateRoomeMultiplayerMenuButton()
     {
-        PhotonNetwork.CreateRoom(_namePlayerPlayerInfoTxt.text);  //дописать
+        bool flagRoomName = false;
+        string nameRoom = "";
+        int n = 0;
+        
+        do
+        {
+            flagRoomName = false;
+            n++;
+            nameRoom = $"{_namePlayerPlayerInfoTxt.text}_{n}";
+
+            foreach (var room in _roomList)
+            {
+                if (nameRoom == room.Name)
+                {
+                    flagRoomName = true;
+                }
+            }
+        } 
+        while (flagRoomName);
+
+        PhotonNetwork.CreateRoom(nameRoom);  //дописать
+        Debug.Log($"Create room name - {nameRoom}");
     }
 
     private void StartPhotoneServer(string PlayerName)
@@ -468,6 +490,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        _roomList = roomList;
         Debug.Log($"RoomListUpdate ({roomList.Count})");
         if(roomList.Count != 0)
         {
@@ -549,6 +572,11 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     private void StartGame()
     {
         PhotonNetwork.LoadLevel("Game");
+
+        _allAccount.SetActive(false);
+        _gameMode.SetActive(false);
+        _multiplayerStartGame.SetActive(false);
+        GameProfile.FlagGameOff.Value = false;
     }
 
     #endregion
