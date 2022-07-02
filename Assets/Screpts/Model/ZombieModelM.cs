@@ -5,9 +5,10 @@ using UnityEngine.AI;
 
 public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 {
-    [SerializeField] private Transform _firstCheckpointTransform;
+    //[SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
 
+    private Transform _firstCheckpointTransform;
     private PhotonView _photonView;
     private int _maxHealth;
     private Transform _attackPoint;
@@ -15,7 +16,7 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private float _attackWeightL = 0;
     private NavMeshAgent _meshUnite;
     private Animator _anim;
-    private Vector3 _nextPosition;
+    private Vector3 _nextPosition = new Vector3(0, 0, 0);
     private Vector3 _worldDeltaPosition;
     private bool _shouldMove;
     private bool _stopUniteCheckpointController = false;
@@ -73,7 +74,7 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 
         _anim = GetComponent<Animator>();
 
-        _nextPosition = _firstCheckpointTransform.position;
+        //_nextPosition = _firstCheckpointTransform.position;
         //_meshUnite.destination = NextPosition;
 
         _anim.SetBool("Move", true);
@@ -132,6 +133,12 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
             }
         }
 
+    }
+
+    public void AssignPosition(Transform position)
+    {
+        _nextPosition = position.position;
+        _firstCheckpointTransform = position;
     }
 
     IEnumerator DeathZombie()

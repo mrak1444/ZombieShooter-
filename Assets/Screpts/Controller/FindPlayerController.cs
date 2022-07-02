@@ -14,6 +14,8 @@ public class FindPlayerController
         _player = player;
         _zombie = zombie;
         _rndCheckpoint = rndCheckpoint;
+
+        Debug.Log($"player - {_player} / zombie - {_zombie}");
     }
 
     public void Checking()

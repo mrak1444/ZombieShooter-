@@ -9,11 +9,13 @@ public class GameController : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _singlePlayer;
     [SerializeField] private GameObject _multyPlayer;
     [SerializeField] private Transform _spawnPlayer;
-    [SerializeField] private GameObject[] _zombiesGameObject;
+    //[SerializeField] private GameObject[] _zombiesGameObject;
+    [SerializeField] private ZombiesGameObjectModel[] _zombiesGameObjectModel;
     [SerializeField] private CheckpointModel _checkpointModel;
     [SerializeField] private GameObject[] _spawnPoints;
     [SerializeField] private UIControllerGame _uiController;
 
+    private GameObject[] _zombiesGameObject;
     private int _maxZombies;
     private GameObject[] _playerGameObject;
     private UniteCheckpointController _uniteCheckpointController;
@@ -49,10 +51,14 @@ public class GameController : MonoBehaviourPunCallbacks
         _uniteCheckpointController = new UniteCheckpointController(_zombie, _rndCheckpoint);
         _findPlayerController = new FindPlayerController(_player, _zombie, _rndCheckpoint);
 
+        _zombiesGameObject = Instantiate(_zombiesGameObjectModel[0], new Vector3(0, 0, 0), Quaternion.identity).ZombiesGameObject;
+
         foreach (var zombie in _zombiesGameObject)
         {
-            _zombie.Add(zombie.GetComponent<IZombie>());
-            _zombie1.Add(zombie.name, zombie.GetComponent<IZombie>());
+            var z = zombie.GetComponent<IZombie>();
+            z.AssignPosition(_rndCheckpoint.RND());
+            _zombie.Add(z);
+            _zombie1.Add(zombie.name, z);
         }
 
         foreach (var player in _playerGameObject)
@@ -80,10 +86,6 @@ public class GameController : MonoBehaviourPunCallbacks
         _player1.Add(p.name, p.GetComponent<IPlayer>());
 
         StartCoroutine(Start2(p));
-
-        
-
-        
     }
 
     private IEnumerator Start2(GameObject p)
@@ -100,15 +102,20 @@ public class GameController : MonoBehaviourPunCallbacks
             }
         }
 
+        if (PhotonNetwork.IsMasterClient) _rndCheckpoint = new RndCheckpoint(_checkpointModel);
+
+        _zombiesGameObject = PhotonNetwork.Instantiate(_zombiesGameObjectModel[1].name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ZombiesGameObjectModel>().ZombiesGameObject;
+
         foreach (var zombie in _zombiesGameObject)
         {
-            _zombie.Add(zombie.GetComponent<IZombie>());
-            _zombie1.Add(zombie.name, zombie.GetComponent<IZombie>());
+            var z = zombie.GetComponent<IZombie>();
+            z.AssignPosition(_rndCheckpoint.RND());
+            _zombie.Add(z);
+            _zombie1.Add(zombie.name, z);
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
-            _rndCheckpoint = new RndCheckpoint(_checkpointModel);
             _uniteCheckpointController = new UniteCheckpointController(_zombie, _rndCheckpoint);
             _findPlayerController = new FindPlayerController(_player, _zombie, _rndCheckpoint);
         }
