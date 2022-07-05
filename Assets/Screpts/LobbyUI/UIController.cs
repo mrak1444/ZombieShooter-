@@ -10,6 +10,10 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 {
+    [Header("Background sound")]
+    [SerializeField] private AudioSource _backgroundSound;
+
+
     [Header("Account")]
     [SerializeField] private GameObject _account;
     [SerializeField] private Button _signInAccountButton;
@@ -135,6 +139,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     {
         if (obj)
         {
+            _backgroundSound.Play();
+
             PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
 
             _playerInfo.SetActive(true);
@@ -408,6 +414,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     private void SingleplayerGameModeButton()
     {
+        _backgroundSound.Stop();
+
         GameProfile.GunId = _itemIdForBuy;
         GameProfile.GunDamage = _damageForBuy;
         GameProfile.GunRange = _rangeForBuy;
@@ -571,6 +579,8 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     [PunRPC]
     private void StartGame()
     {
+        _backgroundSound.Stop();
+
         PhotonNetwork.LoadLevel("Game");
 
         _allAccount.SetActive(false);

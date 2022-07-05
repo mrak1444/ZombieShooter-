@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
 using Photon.Pun;
+using System.Collections.Generic;
 
 public class UIControllerGame : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class UIControllerGame : MonoBehaviour
     [SerializeField] private TMP_Text _info;
     [SerializeField] private GameObject _endGamePanel;
     [SerializeField] private GameObject _camera;
-    [SerializeField] private GameObject _cameraPlayer;
+    //[SerializeField] private GameObject _cameraPlayer;
     [SerializeField] private TMP_Text _infoEndGame;
     [SerializeField] private Button QuitGameButton;
 
@@ -44,27 +45,56 @@ public class UIControllerGame : MonoBehaviour
         _info.text = "You kill zombie";
     }
 
-    public void EndGameKillZombie(int killZombies)
+    public void EndGameKillZombie(int killZombies, Dictionary<string, IPlayer> _player, string namePlayer)
     {
-        StartCoroutine(EndGame(killZombies));
+        int knp = 0;
+        string nameWinner = "Null";
+
+        foreach (var player in _player)
+        {
+            if (knp < player.Value.NumberKilledZombie) 
+            { 
+                knp = player.Value.NumberKilledZombie;
+                nameWinner = player.Key;
+            }
+        }
+
+        StartCoroutine(EndGame(killZombies, nameWinner, namePlayer));
         
     }
 
-    IEnumerator EndGame(int killZombies)
+    IEnumerator EndGame(int killZombies, string nameWinner, string namePlayer)
     {
         yield return new WaitForSeconds(2f);
         Cursor.lockState = CursorLockMode.Confined;
         _endGamePanel.SetActive(true);
         _camera.SetActive(true);
-        _cameraPlayer.SetActive(false);
-        _infoEndGame.text = $"You kill {killZombies} zombies.\nYou get {killZombies * 10} money.";
+        //_cameraPlayer.SetActive(false);
+        _infoEndGame.text = $"You kill {killZombies} zombies.";
+        yield return new WaitForSeconds(1f);
+        _infoEndGame.text += $"\nYou get {killZombies * 10} money.";
+        yield return new WaitForSeconds(1f);
+        _infoEndGame.text += $"\nFirst place was taken by {nameWinner}.";
 
-        AddUserVirtualCurrencyRequest request = new AddUserVirtualCurrencyRequest()
+        AddUserVirtualCurrencyRequest request;
+
+        if (namePlayer == nameWinner)
         {
-            VirtualCurrency = "GD",
-            Amount = killZombies * 10
-        };
-
+            request = new AddUserVirtualCurrencyRequest()
+            {
+                VirtualCurrency = "GD",
+                Amount = (killZombies * 10) + 500 
+            };
+        }
+        else
+        {
+            request = new AddUserVirtualCurrencyRequest()
+            {
+                VirtualCurrency = "GD",
+                Amount = killZombies * 10
+            };
+        }
+        
         PlayFabClientAPI.AddUserVirtualCurrency
             (request,
             result =>

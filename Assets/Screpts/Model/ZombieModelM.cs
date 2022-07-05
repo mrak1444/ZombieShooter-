@@ -7,7 +7,10 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 {
     //[SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
+    [SerializeField] private AudioSource _audioZombie;
+    [SerializeField] private AudioClip[] _audioClips;
 
+    private System.Random _rnd = new System.Random();
     private Transform _firstCheckpointTransform;
     private PhotonView _photonView;
     private int _maxHealth;
@@ -37,8 +40,24 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
     public Vector3 zombieForward => transform.forward;
     public bool ZombieDie { get => _zombieDie; set => _photonView.RPC("ZombieDieMulti", RpcTarget.All, value); }
-    public bool ZombieRun { get => _zombieRun; set => _zombieRun = value; }
-    public bool ZombieAttack { get => _zombieAttack; set => _zombieAttack = value; }
+    public bool ZombieRun 
+    { 
+        get => _zombieRun;
+        set 
+        { 
+            _zombieRun = value;
+            Rnd();
+        }
+    }
+    public bool ZombieAttack 
+    { 
+        get => _zombieAttack;
+        set 
+        { 
+            _zombieAttack = value;
+            Rnd();
+        }
+    }
     public Transform AttackPoint { set => _attackPoint = value; }
 
     #endregion
@@ -55,12 +74,14 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private void HealthMulti(int health)
     {
         _health = health;
+        Rnd();
     }
 
     [PunRPC]
     private void ZombieDieMulti(bool zombieDie)
     {
         _zombieDie = zombieDie;
+        Rnd();
     }
 
     #endregion
@@ -133,6 +154,13 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
             }
         }
 
+    }
+
+    private void Rnd()
+    {
+        //_audioZombie[_rnd.Next(_audioZombie.Length)].Play();
+        _audioZombie.clip = _audioClips[_rnd.Next(_audioClips.Length)];
+        _audioZombie.Play();
     }
 
     public void AssignPosition(Transform position)

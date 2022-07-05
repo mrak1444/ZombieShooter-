@@ -10,6 +10,7 @@ public class GunController : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _gunPoint;
     [SerializeField] private GameObject _lookPoint;
     [SerializeField] private Camera _cam;
+    [SerializeField] private AudioSource _shot;
 
 
     private GameObject _gunObj;
@@ -48,6 +49,7 @@ public class GunController : MonoBehaviourPunCallbacks
 
         if (Input.GetButtonDown("Fire1"))
         {
+            _shot.Play();
             if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, 100f, _layermask))
             {
                 Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 100f);

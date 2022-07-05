@@ -6,7 +6,10 @@ public class ZombieModelS : MonoBehaviour, IZombie
 {
     //[SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
+    [SerializeField] private AudioSource _audioZombie;
+    [SerializeField] private AudioClip[] _audioClips;
 
+    private System.Random _rnd = new System.Random();
     private Transform _firstCheckpointTransform;
     private int _maxHealth;
     private Transform _attackPoint;
@@ -31,12 +34,44 @@ public class ZombieModelS : MonoBehaviour, IZombie
     public Vector3 ZombiePosition => _zombiePosition;
     public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
-    public int Health { get => _health; set => _health = value; }
+    public int Health 
+    { 
+        get => _health;
+        set 
+        { 
+            _health = value;
+            Rnd();
+        }
+    }
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
     public Vector3 zombieForward => transform.forward;
-    public bool ZombieDie { get => _zombieDie; set => _zombieDie = value; }
-    public bool ZombieRun { get => _zombieRun; set => _zombieRun = value; }
-    public bool ZombieAttack { get => _zombieAttack; set => _zombieAttack = value; }
+    public bool ZombieDie 
+    { 
+        get => _zombieDie;
+        set 
+        { 
+            _zombieDie = value;
+            Rnd();
+        } 
+    }
+    public bool ZombieRun 
+    { 
+        get => _zombieRun;
+        set 
+        { 
+            _zombieRun = value;
+            Rnd();
+        } 
+    }
+    public bool ZombieAttack 
+    { 
+        get => _zombieAttack;
+        set 
+        { 
+            _zombieAttack = value;
+            Rnd();
+        }
+    }
     public Transform AttackPoint { set => _attackPoint = value; }
 
     #endregion
@@ -98,6 +133,13 @@ public class ZombieModelS : MonoBehaviour, IZombie
             _shouldMove = (num > 0 ? 1 : 0) > 0 && _meshUnite.remainingDistance > _meshUnite.radius && !_zombieAttack && !_zombieDie && !_zombieRun;
             _anim.SetBool("Move", _shouldMove);
         }
+    }
+
+    private void Rnd()
+    {
+        //_audioZombie[_rnd.Next(_audioZombie.Length)].Play();
+        _audioZombie.clip = _audioClips[_rnd.Next(_audioClips.Length)];
+        _audioZombie.Play();
     }
 
     public void AssignPosition(Transform position)

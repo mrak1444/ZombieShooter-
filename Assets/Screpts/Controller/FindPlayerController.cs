@@ -43,9 +43,9 @@ public class FindPlayerController
 
             if (!zombie.ZombieDie)
             {
-                if (Vector3.Angle(vecPZ, zombie.zombieForward) <= 50f)
+                if (Vector3.Angle(vecPZ, zombie.zombieForward) <= 55f)
                 {
-                    if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 40f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 2f)
+                    if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 25f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 2f)
                     {
                         zombie.StopUniteCheckpointController = true;
                         //zombie.navMeshUnite.destination = player.PlayerPosition;

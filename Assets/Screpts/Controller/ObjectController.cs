@@ -67,8 +67,9 @@ public class ObjectController
         {
             if (_flagEndGame)
             {
+                _player[_name].PlayerOff = true;
                 _flagEndGame = false;
-                _uiController.EndGameKillZombie(_killZombiePlayer);   //переделать на мультиплеер
+                _uiController.EndGameKillZombie(_killZombiePlayer, _player, _name);   //переделать на мультиплеер
             }
             
         }

@@ -8,10 +8,23 @@ public class PlayerModel : MonoBehaviour, IPlayer
 
     private Animator _anim;
     private bool _playerDie = false;
+    private bool _playerOff = false;
     private bool _playerIsMine;
     private int _numberKilledZombie = 0;
 
     public int Health { get => _health; set => _health = value; }
+    public bool PlayerOff 
+    { 
+        get => _playerOff;
+        set
+        {
+            _playerOff = value;
+            if (_playerOff)
+            {
+                StartCoroutine(DeathZombie(2f));
+            }
+        }  
+    }
 
     public bool PlayerDie
     {
@@ -22,7 +35,7 @@ public class PlayerModel : MonoBehaviour, IPlayer
             if (_playerDie)
             {
                 _anim.SetBool("Death", true);
-                StartCoroutine(DeathZombie());
+                StartCoroutine(DeathZombie(5f));
             }
         }
     }
@@ -40,9 +53,9 @@ public class PlayerModel : MonoBehaviour, IPlayer
         _anim = GetComponent<Animator>();
     }
 
-    IEnumerator DeathZombie()
+    IEnumerator DeathZombie(float n)
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(n);
         gameObject.SetActive(false);
     }
 }
