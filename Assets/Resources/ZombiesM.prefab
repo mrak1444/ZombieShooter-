@@ -7491,7 +7491,7 @@ GameObject:
   - component: {fileID: 2812807951467511348}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7524,7 +7524,7 @@ GameObject:
   - component: {fileID: 2812807951579275201}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7557,7 +7557,7 @@ GameObject:
   - component: {fileID: 2812807951626117724}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7590,7 +7590,7 @@ GameObject:
   - component: {fileID: 2812807951246409544}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7623,7 +7623,7 @@ GameObject:
   - component: {fileID: 2812807952155717497}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7656,7 +7656,7 @@ GameObject:
   - component: {fileID: 2812807952222176528}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7689,7 +7689,7 @@ GameObject:
   - component: {fileID: 2812807950177294740}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7722,7 +7722,7 @@ GameObject:
   - component: {fileID: 2812807950197498499}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7755,7 +7755,7 @@ GameObject:
   - component: {fileID: 2812807950352626161}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7788,7 +7788,7 @@ GameObject:
   - component: {fileID: 2812807950939385965}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7821,7 +7821,7 @@ GameObject:
   - component: {fileID: 2812807950930544822}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7854,7 +7854,7 @@ GameObject:
   - component: {fileID: 2812807950928022102}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7887,7 +7887,7 @@ GameObject:
   - component: {fileID: 2812807950974384364}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7920,7 +7920,7 @@ GameObject:
   - component: {fileID: 2812807951009485348}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7953,7 +7953,7 @@ GameObject:
   - component: {fileID: 2812807951071577112}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -7986,7 +7986,7 @@ GameObject:
   - component: {fileID: 2812807951150582568}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -8019,7 +8019,7 @@ GameObject:
   - component: {fileID: 2812807951150976622}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -8052,7 +8052,7 @@ GameObject:
   - component: {fileID: 2812807950722869783}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -8085,7 +8085,7 @@ GameObject:
   - component: {fileID: 2812807950817310074}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -8118,7 +8118,7 @@ GameObject:
   - component: {fileID: 2812807950818459065}
   m_Layer: 0
   m_Name: Base HumanPelvis
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -24712,7 +24712,7 @@ GameObject:
   - component: {fileID: 7054085918155759444}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -24850,7 +24850,7 @@ GameObject:
   - component: {fileID: 7054085918092178749}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -24988,7 +24988,7 @@ GameObject:
   - component: {fileID: 7054085917773762073}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25126,7 +25126,7 @@ GameObject:
   - component: {fileID: 7054085917642207212}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25264,7 +25264,7 @@ GameObject:
   - component: {fileID: 7054085917596799601}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25402,7 +25402,7 @@ GameObject:
   - component: {fileID: 7054085917439381349}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25540,7 +25540,7 @@ GameObject:
   - component: {fileID: 7054085919369165435}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25678,7 +25678,7 @@ GameObject:
   - component: {fileID: 7054085919384336539}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25816,7 +25816,7 @@ GameObject:
   - component: {fileID: 7054085919355306048}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -25954,7 +25954,7 @@ GameObject:
   - component: {fileID: 7054085919323195585}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26092,7 +26092,7 @@ GameObject:
   - component: {fileID: 7054085919287042569}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26230,7 +26230,7 @@ GameObject:
   - component: {fileID: 7054085919223378997}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26368,7 +26368,7 @@ GameObject:
   - component: {fileID: 7054085919163906821}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26506,7 +26506,7 @@ GameObject:
   - component: {fileID: 7054085919164300867}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26644,7 +26644,7 @@ GameObject:
   - component: {fileID: 7054085919038233146}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26782,7 +26782,7 @@ GameObject:
   - component: {fileID: 7054085918960698711}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -26920,7 +26920,7 @@ GameObject:
   - component: {fileID: 7054085918957587860}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -27058,7 +27058,7 @@ GameObject:
   - component: {fileID: 7054085918526187961}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -27196,7 +27196,7 @@ GameObject:
   - component: {fileID: 7054085918504407726}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -27334,7 +27334,7 @@ GameObject:
   - component: {fileID: 7054085918332371420}
   m_Layer: 0
   m_Name: Zombie1
-  m_TagString: Zombie
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0

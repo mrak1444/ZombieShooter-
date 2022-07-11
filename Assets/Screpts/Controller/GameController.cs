@@ -104,14 +104,16 @@ public class GameController : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient) _rndCheckpoint = new RndCheckpoint(_checkpointModel);
 
-        _zombiesGameObject = PhotonNetwork.Instantiate(_zombiesGameObjectModel[1].name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ZombiesGameObjectModel>().ZombiesGameObject;
+        if (PhotonNetwork.IsMasterClient) _zombiesGameObject = PhotonNetwork.Instantiate(_zombiesGameObjectModel[1].name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ZombiesGameObjectModel>().ZombiesGameObject;
+        else _zombiesGameObject = GameObject.FindGameObjectsWithTag("Zombie");
 
         foreach (var zombie in _zombiesGameObject)
         {
             var z = zombie.GetComponent<IZombie>();
-            z.AssignPosition(_rndCheckpoint.RND());
+            if (PhotonNetwork.IsMasterClient) z.AssignPosition(_rndCheckpoint.RND());
             _zombie.Add(z);
             _zombie1.Add(zombie.name, z);
+            if (!PhotonNetwork.IsMasterClient) Debug.Log($"zombie name - {zombie.name}");   ///////
         }
 
         if (PhotonNetwork.IsMasterClient)
