@@ -8,31 +8,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
+public class LobbyUIController : MonoBehaviourPunCallbacks
 {
     [Header("Background sound")]
     [SerializeField] private AudioSource _backgroundSound;
-
-
-    [Header("Account")]
-    [SerializeField] private GameObject _account;
-    [SerializeField] private Button _signInAccountButton;
-    [SerializeField] private Button _createAccountButton;
-
-    [Header("SignIn")]
-    [SerializeField] private GameObject _signIn;
-    [SerializeField] private Button _backSignInButton;
-    [SerializeField] private Button _signInSignInButton;
-    [SerializeField] private InputField _usernameSignIn;
-    [SerializeField] private InputField _passwordSignIn;
-
-    [Header("CreateAccount")]
-    [SerializeField] private GameObject _createAccount;
-    [SerializeField] private Button _backCreateAccountButton;
-    [SerializeField] private Button _okCreateAccountButton;
-    [SerializeField] private InputField _emailCreateAccount;
-    [SerializeField] private InputField _usernameCreateAccount;
-    [SerializeField] private InputField _passwordCreateAccount;
 
     [Header("PlayerInfo")]
     [SerializeField] private GameObject _playerInfo;
@@ -99,19 +78,10 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
     {
         _photonView = PhotonView.Get(this);
 
-        GameProfile.FlagGameOff.SubscribeOnChange(GameOff);
-
-        //Account
-        _signInAccountButton.onClick.AddListener(SignInAccountButton);
-        _createAccountButton.onClick.AddListener(CreateAccountButton);
-
-        //SignIn
-        _backSignInButton.onClick.AddListener(BackSignInButton);
-        _signInSignInButton.onClick.AddListener(SignInSignInButton);
-
-        //CreateAccount
-        _backCreateAccountButton.onClick.AddListener(BackCreateAccountButton);
-        _okCreateAccountButton.onClick.AddListener(OkCreateAccountButton);
+        //Start
+        GetAccountSuccess(GameProfile.ResultGetAccountInfo);
+        GetInventorySuccess(GameProfile.ResultGetUserInventory);
+        GetCatalogSuccess(GameProfile.ResultGetCatalogItems);
 
         //PlayerInfo
         _backPlayerInfoButton.onClick.AddListener(BackPlayerInfoButton);
@@ -135,9 +105,40 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         _startGameMultiplayerStartGameButton.onClick.AddListener(StartGameMultiplayerStartGameButton);
     }
 
-    private void GameOff(bool obj)
+    #region [Start]
+
+    private void GetAccountSuccess(GetAccountInfoResult result)
     {
-        if (obj)
+        _namePlayerPlayerInfoTxt.text = result.AccountInfo.Username;
+        GameProfile.PlayerName = result.AccountInfo.Username;
+        //StartPhotoneServer(result.AccountInfo.Username);
+    }
+
+    private void GetInventorySuccess(GetUserInventoryResult obj)
+    {
+        _inventoryList = obj.Inventory;
+        _virtualCurrency = obj.VirtualCurrency;
+        _moneyInventoryTxt.text = _virtualCurrency["GD"].ToString();
+    }
+
+    private void GetCatalogSuccess(GetCatalogItemsResult obj)
+    {
+        HandleCatalog(obj.Catalog);
+        Debug.Log($"Catalog was loaded successfully!");
+    }
+
+    #endregion
+
+    #region [PlayerInfo]
+
+    private void BackPlayerInfoButton()
+    {
+        //GameProfile.FlagGameOff.Value = true;
+
+        //_account.SetActive(true);
+        //_playerInfo.SetActive(false);
+
+        /*if (obj)
         {
             _backgroundSound.Play();
 
@@ -147,112 +148,7 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
             _allAccount.SetActive(true);
             //SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
             SceneManager.UnloadSceneAsync("Game");
-        }
-    }
-
-
-
-    #region [Account]
-    private void SignInAccountButton()
-    {
-        _signIn.SetActive(true);
-        _account.SetActive(false);
-    }
-
-    private void CreateAccountButton()
-    {
-        _createAccount.SetActive(true);
-        _account.SetActive(false);
-    }
-
-    #endregion
-
-    #region [SignIn]
-
-    private void BackSignInButton()
-    {
-        _account.SetActive(true);
-        _signIn.SetActive(false);
-    }
-
-    private void SignInSignInButton()
-    {
-        PlayFabClientAPI.LoginWithPlayFab(new LoginWithPlayFabRequest
-        {
-            Username = _usernameSignIn.text,
-            Password = _passwordSignIn.text
-        }, result =>
-        {
-            PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest(), OnGetAccountSuccess, OnFailure);
-            PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
-            PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest(), OnGetCatalogSuccess, OnFailure);
-            
-            Debug.Log($"Success: {_usernameSignIn.text}");
-
-            _playerInfo.SetActive(true);
-            _signIn.SetActive(false);
-        }, error =>
-        {
-            Debug.LogError($"Fail: {error.ErrorMessage}");
-        });
-
-        //подключается к серверам поле удачного подключения открывает панель PlayerInfo
-
-    }
-
-    private void OnFailure(PlayFabError error)
-    {
-        var errorMessage = error.GenerateErrorReport();
-        Debug.LogError($"Something went wrong: {errorMessage}");
-    }
-
-    private void OnGetInventorySuccess(GetUserInventoryResult obj)
-    {
-        _inventoryList = obj.Inventory;
-        _virtualCurrency = obj.VirtualCurrency;
-        _moneyInventoryTxt.text = _virtualCurrency["GD"].ToString();
-    }
-
-    #endregion
-
-    #region [CreateAccount]
-
-    private void BackCreateAccountButton()
-    {
-        _account.SetActive(true);
-        _createAccount.SetActive(false);
-    }
-
-    private void OkCreateAccountButton()
-    {
-        PlayFabClientAPI.RegisterPlayFabUser(new RegisterPlayFabUserRequest
-        {
-            Username = _usernameCreateAccount.text,
-            Email = _emailCreateAccount.text,
-            Password = _passwordCreateAccount.text,
-            RequireBothUsernameAndEmail = true
-        }, result =>
-        {
-            _account.SetActive(true);
-            _createAccount.SetActive(false);
-            Debug.Log($"Success: {_usernameCreateAccount.text}");
-        }, error =>
-        {
-            Debug.LogError($"Fail: {error.ErrorMessage}");
-        });
-
-        //создает нового пользователя в playfab и выходит назад в меню
-
-    }
-
-    #endregion
-
-    #region [PlayerInfo]
-
-    private void BackPlayerInfoButton()
-    {
-        _account.SetActive(true);
-        _playerInfo.SetActive(false);
+        }*/
     }
 
     private void OkPlayerInfoButton()
@@ -421,11 +317,10 @@ public class UIController : MonoBehaviourPunCallbacks //MonoBehaviour
         GameProfile.GunRange = _rangeForBuy;
         GameProfile.GameMode = GameMode.Singeplayer;
 
-        SceneManager.LoadScene("Game", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Game", LoadSceneMode.Single);
 
         _allAccount.SetActive(false);
         _gameMode.SetActive(false);
-        GameProfile.FlagGameOff.Value = false;
     }
 
     private void MultiplayerGameModeButton()
