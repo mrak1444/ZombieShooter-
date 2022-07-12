@@ -85,6 +85,8 @@ public class GameController : MonoBehaviourPunCallbacks
         _player.Add(p.GetComponent<IPlayer>());
         _player1.Add(p.name, p.GetComponent<IPlayer>());
 
+        if (PhotonNetwork.IsMasterClient) _zombiesGameObject = PhotonNetwork.Instantiate(_zombiesGameObjectModel[1].name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ZombiesGameObjectModel>().ZombiesGameObject;
+
         StartCoroutine(Start2(p));
     }
 
@@ -104,8 +106,7 @@ public class GameController : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient) _rndCheckpoint = new RndCheckpoint(_checkpointModel);
 
-        if (PhotonNetwork.IsMasterClient) _zombiesGameObject = PhotonNetwork.Instantiate(_zombiesGameObjectModel[1].name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ZombiesGameObjectModel>().ZombiesGameObject;
-        else _zombiesGameObject = GameObject.FindGameObjectsWithTag("Zombie");
+        if (!PhotonNetwork.IsMasterClient) _zombiesGameObject = GameObject.FindGameObjectsWithTag("Zombie");
 
         foreach (var zombie in _zombiesGameObject)
         {
@@ -129,7 +130,14 @@ public class GameController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (_multyFlag)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Cursor.lockState == CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Confined;
+            else Cursor.lockState = CursorLockMode.Locked;
+        }
+
+
+            if (_multyFlag)
         {
             if (PhotonNetwork.IsMasterClient)
             {

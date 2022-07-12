@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface IPlayer
 {
+    string Name { get; }
     int Health { get; set; }
     Vector3 PlayerPosition { get; }
     Transform AttackPoint { get; }

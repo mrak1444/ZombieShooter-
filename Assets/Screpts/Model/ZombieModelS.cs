@@ -17,7 +17,7 @@ public class ZombieModelS : MonoBehaviour, IZombie
     private float _attackWeightL = 0;
     private NavMeshAgent _meshUnite;
     private Animator _anim;
-    private Vector3 _nextPosition = new Vector3(0,0,0);
+    private Vector3 _nextPosition = new Vector3(0, 0, 0);
     private Vector3 _worldDeltaPosition;
     private bool _shouldMove;
     private bool _stopUniteCheckpointController = false;
@@ -30,44 +30,46 @@ public class ZombieModelS : MonoBehaviour, IZombie
     private int _numberKilledZombie;
 
     #region PropertiesModel
-    public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value;}
-    public Vector3 ZombiePosition => _zombiePosition;
+
+    public string Name { get => gameObject.name; }
+    public bool FalgAccessDeath { get => _falgAccessDeath; set => _falgAccessDeath = value; }
+    public Vector3 ZombiePosition => transform.position;
     public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
-    public int Health 
-    { 
+    public int Health
+    {
         get => _health;
-        set 
-        { 
+        set
+        {
             _health = value;
             Rnd();
         }
     }
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
     public Vector3 zombieForward => transform.forward;
-    public bool ZombieDie 
-    { 
+    public bool ZombieDie
+    {
         get => _zombieDie;
-        set 
-        { 
+        set
+        {
             _zombieDie = value;
             Rnd();
-        } 
+        }
     }
-    public bool ZombieRun 
-    { 
+    public bool ZombieRun
+    {
         get => _zombieRun;
-        set 
-        { 
+        set
+        {
             _zombieRun = value;
             Rnd();
-        } 
+        }
     }
-    public bool ZombieAttack 
-    { 
+    public bool ZombieAttack
+    {
         get => _zombieAttack;
-        set 
-        { 
+        set
+        {
             _zombieAttack = value;
             Rnd();
         }
@@ -80,12 +82,12 @@ public class ZombieModelS : MonoBehaviour, IZombie
     {
         _zombiePosition = transform.position;
         _maxHealth = _health;
-        
+
         _anim = GetComponent<Animator>();
-        
+
         //_nextPosition = _firstCheckpointTransform.position;
         //_meshUnite.destination = NextPosition;
-        
+
         _anim.SetBool("Move", true);
 
         _meshUnite = GetComponent<NavMeshAgent>();
@@ -174,7 +176,7 @@ public class ZombieModelS : MonoBehaviour, IZombie
     {
         if (_anim)
         {
-            if(_attackPoint != null)
+            if (_attackPoint != null)
             {
                 _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, _attackWeightR);
                 _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, _attackWeightR);
@@ -191,13 +193,13 @@ public class ZombieModelS : MonoBehaviour, IZombie
 
     public void Spawn(Vector3 spawnPoint)
     {
-        
+
         StartCoroutine(SpawnZombie(spawnPoint));
     }
 
     IEnumerator SpawnZombie(Vector3 spawnPoint)
     {
-        
+
         yield return new WaitForSeconds(5f);
         _meshUnite.enabled = false;
         transform.position = spawnPoint;
@@ -214,7 +216,7 @@ public class ZombieModelS : MonoBehaviour, IZombie
 
     public void DisableZombie()
     {
-        if(gameObject.activeSelf) StartCoroutine(DeathZombie());
+        if (gameObject.activeSelf) StartCoroutine(DeathZombie());
     }
 
     /*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

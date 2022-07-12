@@ -143,11 +143,6 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
 
     #endregion
 
-    private void Update()
-    {
-        if (_flag1 && _flag2 && _flag3) SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
-    }
-
     #region [CreateAccount]
 
     private void BackCreateAccountButton()
@@ -166,6 +161,11 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
             RequireBothUsernameAndEmail = true
         }, result =>
         {
+            AddUserVirtualCurrencyRequest request = new AddUserVirtualCurrencyRequest()
+            {
+                VirtualCurrency = "GD",
+                Amount = 1000
+            };
             _account.SetActive(true);
             _createAccount.SetActive(false);
             Debug.Log($"Success: {_usernameCreateAccount.text}");
@@ -179,4 +179,9 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
     }
 
     #endregion
+
+    private void Update()
+    {
+        if (_flag1 && _flag2 && _flag3) SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+    }
 }

@@ -61,7 +61,7 @@ public class GunControllerM : MonoBehaviourPun
         if (Input.GetButtonDown("Fire1"))
         {
             _shot.Play();
-            if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, 100f, _layermask))
+            if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, (float)GameProfile.GunRange, _layermask))
             {
                 Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 100f);
 

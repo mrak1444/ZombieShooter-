@@ -45,7 +45,7 @@ public class FindPlayerController
             {
                 if (Vector3.Angle(vecPZ, zombie.zombieForward) <= 55f)
                 {
-                    if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 25f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 2f)
+                    if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) < 20f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 3f)
                     {
                         zombie.StopUniteCheckpointController = true;
                         //zombie.navMeshUnite.destination = player.PlayerPosition;
@@ -55,14 +55,16 @@ public class FindPlayerController
                         zombie.StopUnite = false;
                         zombie.AttackPoint = null;
                     }
-                    else if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) <= 2f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 1f)
+                    else if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) <= 3f && Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) > 1f)
                     {
+                        zombie.ZombieRun = false;
                         zombie.ZombieAttack = true;
                         zombie.StopUnite = false;
                         zombie.AttackPoint = player.AttackPoint;
                     }
                     else if (Vector3.Distance(zombie.ZombiePosition, player.PlayerPosition) <= 1f)
                     {
+                        zombie.ZombieAttack = true;
                         zombie.StopUnite = true;
                         zombie.ZombieRun = false;
                         zombie.AttackPoint = null;

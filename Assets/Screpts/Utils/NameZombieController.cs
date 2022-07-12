@@ -9,4 +9,6 @@ public class NameZombieController : MonoBehaviour
     {
         _nameZombie.text = gameObject.name;
     }
+
+
 }

@@ -76,6 +76,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        _multiplayerMenu.SetActive(false);
+
         _photonView = PhotonView.Get(this);
 
         //Start
@@ -329,8 +331,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         GameProfile.GunDamage = _damageForBuy;
         GameProfile.GunRange = _rangeForBuy;
         GameProfile.GameMode = GameMode.Multiplayer;
-        _gameMode.SetActive(false);
-        _multiplayerMenu.SetActive(true);
+        //_gameMode.SetActive(false);
+        //_multiplayerMenu.SetActive(true);
         StartPhotoneServer(_namePlayerPlayerInfoTxt.text);
         
     }
@@ -407,6 +409,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
                 }
             }
         }
+        _gameMode.SetActive(false);
+        _multiplayerMenu.SetActive(true);
     }
 
     private void ClickButtonsJoinRoom(string name)

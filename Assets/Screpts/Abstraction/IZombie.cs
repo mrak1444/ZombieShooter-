@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 public interface IZombie
 {
+    string Name { get; }
     Vector3 zombieForward { get; }
     Vector3 ZombiePosition { get; }
     Vector3 NextPosition { get; set; }

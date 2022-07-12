@@ -15,6 +15,7 @@ public class PlayerModelM : MonoBehaviourPunCallbacks, IPlayer
     private bool _playerIsMine;
     private int _numberKilledZombie = 0;
 
+    public string Name { get => gameObject.name; }
     public int Health { get => _health; set => _health = value; }
     public bool PlayerOff
     {

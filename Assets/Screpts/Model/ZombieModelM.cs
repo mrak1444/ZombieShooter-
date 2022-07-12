@@ -32,28 +32,30 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private int _numberKilledZombie;
 
     #region PropertiesModel
+
+    public string Name { get => gameObject.name; }
     public bool FalgAccessDeath { get => _falgAccessDeath; set => _photonView.RPC("FalgAccessDeathMulti", RpcTarget.All, value); }
-    public Vector3 ZombiePosition => _zombiePosition;
+    public Vector3 ZombiePosition => transform.position;
     public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
     public bool StopUnite { set => _meshUnite.isStopped = value; }
     public int Health { get => _health; set => _photonView.RPC("HealthMulti", RpcTarget.All, value); }
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
     public Vector3 zombieForward => transform.forward;
     public bool ZombieDie { get => _zombieDie; set => _photonView.RPC("ZombieDieMulti", RpcTarget.All, value); }
-    public bool ZombieRun 
-    { 
+    public bool ZombieRun
+    {
         get => _zombieRun;
-        set 
-        { 
+        set
+        {
             _zombieRun = value;
             Rnd();
         }
     }
-    public bool ZombieAttack 
-    { 
+    public bool ZombieAttack
+    {
         get => _zombieAttack;
-        set 
-        { 
+        set
+        {
             _zombieAttack = value;
             Rnd();
         }
@@ -241,7 +243,7 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     public void DisableZombie()
     {
         _photonView.RPC("DisableZombie2", RpcTarget.All);
-        
+
     }
 
     [PunRPC]
