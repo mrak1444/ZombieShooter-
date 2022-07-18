@@ -137,7 +137,7 @@ public class GameController : MonoBehaviourPunCallbacks
         }
 
 
-            if (_multyFlag)
+        if (_multyFlag)
         {
             if (PhotonNetwork.IsMasterClient)
             {

@@ -28,7 +28,7 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private bool _zombieAttack = false;
     private bool _zombieActive = true;
     private bool _falgAccessDeath = true;
-    private Vector3 _zombiePosition;
+    //private Vector3 _zombiePosition;
     private int _numberKilledZombie;
 
     #region PropertiesModel
@@ -37,7 +37,13 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     public bool FalgAccessDeath { get => _falgAccessDeath; set => _photonView.RPC("FalgAccessDeathMulti", RpcTarget.All, value); }
     public Vector3 ZombiePosition => transform.position;
     public Vector3 NextPosition { get => _nextPosition; set => _nextPosition = value; }
-    public bool StopUnite { set => _meshUnite.isStopped = value; }
+    public bool StopUnite 
+    {
+        set 
+        { 
+            if (PhotonNetwork.IsMasterClient) _meshUnite.isStopped = value; 
+        } 
+    }
     public int Health { get => _health; set => _photonView.RPC("HealthMulti", RpcTarget.All, value); }
     public bool StopUniteCheckpointController { get => _stopUniteCheckpointController; set => _stopUniteCheckpointController = value; }
     public Vector3 zombieForward => transform.forward;
@@ -92,18 +98,21 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     {
         _photonView = PhotonView.Get(this);
 
-        _zombiePosition = transform.position;
+        //_zombiePosition = transform.position;
         _maxHealth = _health;
 
-        _anim = GetComponent<Animator>();
+        
 
         //_nextPosition = _firstCheckpointTransform.position;
         //_meshUnite.destination = NextPosition;
 
-        _anim.SetBool("Move", true);
+        
 
         if (PhotonNetwork.IsMasterClient)
         {
+            _anim = GetComponent<Animator>();
+            _anim.SetBool("Move", true);
+
             _meshUnite = GetComponent<NavMeshAgent>();
             _meshUnite.updatePosition = false;
             _meshUnite.destination = NextPosition;
@@ -116,37 +125,35 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             _meshUnite.destination = NextPosition;
-        }
 
-        if (_zombieRun)
-        {
-            _anim.SetBool("Run", true);
-            if (PhotonNetwork.IsMasterClient) _meshUnite.speed = 3f;
-        }
-        else
-        {
-            _anim.SetBool("Run", false);
-            if (PhotonNetwork.IsMasterClient) _meshUnite.speed = 1f;
-        }
+            if (_zombieRun)
+            {
+                _anim.SetBool("Run", true);
+                _meshUnite.speed = 3f;
+            }
+            else
+            {
+                _anim.SetBool("Run", false);
+                _meshUnite.speed = 1f;
+            }
 
-        if (_zombieAttack)
-        {
-            _anim.SetLayerWeight(1, 1);
-            _anim.SetBool("Attack", true);
-        }
-        else
-        {
-            _anim.SetLayerWeight(1, 0);
-            _anim.SetBool("Attack", false);
-        }
+            if (_zombieAttack)
+            {
+                _anim.SetLayerWeight(1, 1);
+                _anim.SetBool("Attack", true);
+            }
+            else
+            {
+                _anim.SetLayerWeight(1, 0);
+                _anim.SetBool("Attack", false);
+            }
 
-        if (_zombieDie)
-        {
-            _anim.SetBool("Death", true);
-            StopUnite = true;
-        }
-        if (PhotonNetwork.IsMasterClient)
-        {
+            if (_zombieDie)
+            {
+                _anim.SetBool("Death", true);
+                StopUnite = true;
+            }
+
             if (!_meshUnite.isStopped)
             {
                 _worldDeltaPosition = _meshUnite.nextPosition - transform.position;
@@ -155,7 +162,6 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
                 _anim.SetBool("Move", _shouldMove);
             }
         }
-
     }
 
     private void Rnd()
@@ -195,19 +201,22 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 
     private void OnAnimatorIK()
     {
-        if (_anim)
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (_attackPoint != null)
+            if (_anim)
             {
-                _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, _attackWeightR);
-                _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, _attackWeightR);
-                _anim.SetIKPosition(AvatarIKGoal.RightHand, _attackPoint.position);
-                _anim.SetIKRotation(AvatarIKGoal.RightHand, _attackPoint.rotation);
+                if (_attackPoint != null)
+                {
+                    _anim.SetIKPositionWeight(AvatarIKGoal.RightHand, _attackWeightR);
+                    _anim.SetIKRotationWeight(AvatarIKGoal.RightHand, _attackWeightR);
+                    _anim.SetIKPosition(AvatarIKGoal.RightHand, _attackPoint.position);
+                    _anim.SetIKRotation(AvatarIKGoal.RightHand, _attackPoint.rotation);
 
-                _anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, _attackWeightL);
-                _anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, _attackWeightL);
-                _anim.SetIKPosition(AvatarIKGoal.LeftHand, _attackPoint.position);
-                _anim.SetIKRotation(AvatarIKGoal.LeftHand, _attackPoint.rotation);
+                    _anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, _attackWeightL);
+                    _anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, _attackWeightL);
+                    _anim.SetIKPosition(AvatarIKGoal.LeftHand, _attackPoint.position);
+                    _anim.SetIKRotation(AvatarIKGoal.LeftHand, _attackPoint.rotation);
+                }
             }
         }
     }
@@ -225,18 +234,22 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 
     IEnumerator SpawnZombie(Vector3 spawnPoint)
     {
-
         yield return new WaitForSeconds(5f);
-        _meshUnite.enabled = false;
-        transform.position = spawnPoint;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _meshUnite.enabled = false;
+            _anim.SetBool("Death", false);
+            _anim.SetBool("Move", true);
+            transform.position = spawnPoint;
+            _nextPosition = _firstCheckpointTransform.position;
+            _meshUnite.enabled = true;
+            _meshUnite.destination = NextPosition;
+        }
+
         ZombieDie = false;
-        _anim.SetBool("Death", false);
-        _anim.SetBool("Move", true);
         _health = _maxHealth;
-        _meshUnite.enabled = true;
         StopUnite = false;
-        _nextPosition = _firstCheckpointTransform.position;
-        _meshUnite.destination = NextPosition;
         FalgAccessDeath = true;
     }
 

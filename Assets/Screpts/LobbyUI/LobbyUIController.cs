@@ -12,6 +12,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 {
     [Header("Background sound")]
     [SerializeField] private AudioSource _backgroundSound;
+    [SerializeField] private Button _quitGameButton;
 
     [Header("PlayerInfo")]
     [SerializeField] private GameObject _playerInfo;
@@ -67,7 +68,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private int _rangeForBuy;
     private string _itemIdForBuy;
     private int _priceForBuy;
-    private bool _connectedToPhotone = false;
+    private bool _clickButtonRooms = false;
+    private bool _updateRooms = false;
     private RoomOptions _roomOptions = new RoomOptions();
     private TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
     private List<Player> _players = new List<Player>();
@@ -77,8 +79,12 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private void Start()
     {
         _multiplayerMenu.SetActive(false);
+        _clickButtonRooms = false;
+        _updateRooms = false;
 
         _photonView = PhotonView.Get(this);
+
+        _quitGameButton.onClick.AddListener(QuitGameButton);
 
         //Start
         GetAccountSuccess(GameProfile.ResultGetAccountInfo);
@@ -105,6 +111,20 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
         //MultiplayerStartGame
         _startGameMultiplayerStartGameButton.onClick.AddListener(StartGameMultiplayerStartGameButton);
+    }
+
+    private void QuitGameButton()
+    {
+        Application.Quit();
+    }
+
+    private void Update()
+    {
+        if (_clickButtonRooms && _updateRooms) 
+        { 
+            _multiplayerMenu.SetActive(true);
+            _clickButtonRooms = false;
+        }
     }
 
     #region [Start]
@@ -333,6 +353,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         GameProfile.GameMode = GameMode.Multiplayer;
         //_gameMode.SetActive(false);
         //_multiplayerMenu.SetActive(true);
+        _clickButtonRooms = true;
         StartPhotoneServer(_namePlayerPlayerInfoTxt.text);
         
     }
@@ -384,7 +405,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Photone! OnConnectedToMaster");
-        _connectedToPhotone = true;
+        //_connectedToPhotone = true;
         PhotonNetwork.JoinLobby(_customLobby);
     }
 
@@ -410,7 +431,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
             }
         }
         _gameMode.SetActive(false);
-        _multiplayerMenu.SetActive(true);
+        
+        _updateRooms = true;
     }
 
     private void ClickButtonsJoinRoom(string name)
@@ -454,7 +476,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
         if (_players.Count != 0)
         {
-            for (int i = 0; i < _PlayersButtonsMultiplayerStartGame.Length; i++)
+            for (int i = 0; i < _players.Count; i++)
             {
                 _playersTxtMultiplayerStartGame[i].text = _players[i].NickName;
             }
@@ -479,13 +501,12 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private void StartGame()
     {
         _backgroundSound.Stop();
-
-        PhotonNetwork.LoadLevel("Game");
-
         _allAccount.SetActive(false);
         _gameMode.SetActive(false);
         _multiplayerStartGame.SetActive(false);
         GameProfile.FlagGameOff.Value = false;
+
+        PhotonNetwork.LoadLevel("Game");
     }
 
     #endregion
