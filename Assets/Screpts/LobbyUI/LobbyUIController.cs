@@ -153,7 +153,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
     private void BackPlayerInfoButton()
     {
-        
+        SceneManager.LoadScene("Start", LoadSceneMode.Single);
     }
 
     private void OkPlayerInfoButton()
