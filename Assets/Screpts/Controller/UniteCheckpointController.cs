@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class UniteCheckpointController
 {
@@ -27,7 +25,6 @@ public class UniteCheckpointController
                 if (zombie.ZombiePosition.x >= zombie.NextPosition.x - 1 && zombie.ZombiePosition.x <= zombie.NextPosition.x + 1 && zombie.ZombiePosition.z >= zombie.NextPosition.z - 1 && zombie.ZombiePosition.z <= zombie.NextPosition.z + 1)
                 {
                     zombie.NextPosition = _rndCheckpoint.RND().position;
-                    //zombie.navMeshUnite.destination = zombie.NextPosition;
                 }
             }
         }

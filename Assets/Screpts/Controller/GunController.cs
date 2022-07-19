@@ -19,7 +19,6 @@ public class GunController : MonoBehaviourPunCallbacks
     private Transform _rightHandObj = null;
     private Transform _leftHandObj = null;
     private Dictionary<string, GameObject> _gunPrefDict = new Dictionary<string, GameObject>();
-    private bool _flagFire = false;
 
     private void Start()
     {
@@ -52,16 +51,10 @@ public class GunController : MonoBehaviourPunCallbacks
             _shot.Play();
             if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, (float)GameProfile.GunRange, _layermask))
             {
-                Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 100f);
-
                 if (hit.transform.gameObject.CompareTag("Zombie"))
                 {
                     GameProfile.DamageForZombie.Value = new SubscriptionData(gameObject.name, hit.transform.gameObject.name, _gunModel.Damage);
                 }
-            }
-            else
-            {
-                Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 10f);
             }
         }
     }

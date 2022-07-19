@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class ZombieModelS : MonoBehaviour, IZombie
 {
-    //[SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
     [SerializeField] private AudioSource _audioZombie;
     [SerializeField] private AudioClip[] _audioClips;
@@ -24,10 +23,7 @@ public class ZombieModelS : MonoBehaviour, IZombie
     private bool _zombieDie = false;
     private bool _zombieRun = false;
     private bool _zombieAttack = false;
-    private bool _zombieActive = true;
     private bool _falgAccessDeath = true;
-    private Vector3 _zombiePosition;
-    private int _numberKilledZombie;
 
     #region PropertiesModel
 
@@ -80,16 +76,9 @@ public class ZombieModelS : MonoBehaviour, IZombie
 
     private void Start()
     {
-        _zombiePosition = transform.position;
         _maxHealth = _health;
-
         _anim = GetComponent<Animator>();
-
-        //_nextPosition = _firstCheckpointTransform.position;
-        //_meshUnite.destination = NextPosition;
-
         _anim.SetBool("Move", true);
-
         _meshUnite = GetComponent<NavMeshAgent>();
         _meshUnite.updatePosition = false;
         _meshUnite.destination = NextPosition;
@@ -139,7 +128,6 @@ public class ZombieModelS : MonoBehaviour, IZombie
 
     private void Rnd()
     {
-        //_audioZombie[_rnd.Next(_audioZombie.Length)].Play();
         _audioZombie.clip = _audioClips[_rnd.Next(_audioClips.Length)];
         _audioZombie.Play();
     }
@@ -153,7 +141,6 @@ public class ZombieModelS : MonoBehaviour, IZombie
     IEnumerator DeathZombie()
     {
         yield return new WaitForSeconds(5f);
-        //ZombieDie = false;
         gameObject.SetActive(false);
     }
 
@@ -218,20 +205,4 @@ public class ZombieModelS : MonoBehaviour, IZombie
     {
         if (gameObject.activeSelf) StartCoroutine(DeathZombie());
     }
-
-    /*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            stream.SendNext(_health);
-            stream.SendNext(_zombieDie);
-            
-        }
-        else
-        {
-            this._health = (int)stream.ReceiveNext();
-            this._zombieDie = (bool)stream.ReceiveNext();
-            
-        }
-    }*/
 }

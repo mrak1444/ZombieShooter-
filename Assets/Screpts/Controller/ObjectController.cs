@@ -96,7 +96,7 @@ public class ObjectController
                 {
                     z.Value.Spawn(_spawnPoints[_rnd.Next(_spawnPoints.Length)].transform.position);
                 }
-                else //if ((_killZombie + _zombie.Count) > _maxZombies)
+                else
                 {
                     z.Value.DisableZombie();
                 }

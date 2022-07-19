@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -16,7 +15,6 @@ public class UIControllerGame : MonoBehaviour
     [SerializeField] private TMP_Text _info;
     [SerializeField] private GameObject _endGamePanel;
     [SerializeField] private GameObject _camera;
-    //[SerializeField] private GameObject _cameraPlayer;
     [SerializeField] private TMP_Text _infoEndGame;
     [SerializeField] private Button QuitGameButton;
 
@@ -61,7 +59,6 @@ public class UIControllerGame : MonoBehaviour
         }
 
         StartCoroutine(EndGame(killZombies, nameWinner, namePlayer));
-        
     }
 
     IEnumerator EndGame(int killZombies, string nameWinner, string namePlayer)
@@ -70,7 +67,6 @@ public class UIControllerGame : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         _endGamePanel.SetActive(true);
         _camera.SetActive(true);
-        //_cameraPlayer.SetActive(false);
         _infoEndGame.text = $"You kill {killZombies} zombies.";
         yield return new WaitForSeconds(1f);
         _infoEndGame.text += $"\nYou get {killZombies * 10} money.";

@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 {
-    //[SerializeField] private Transform _firstCheckpointTransform;
     [SerializeField] private int _health = 3;
     [SerializeField] private AudioSource _audioZombie;
     [SerializeField] private AudioClip[] _audioClips;
@@ -26,10 +25,7 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private bool _zombieDie = false;
     private bool _zombieRun = false;
     private bool _zombieAttack = false;
-    private bool _zombieActive = true;
     private bool _falgAccessDeath = true;
-    //private Vector3 _zombiePosition;
-    private int _numberKilledZombie;
 
     #region PropertiesModel
 
@@ -97,22 +93,12 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     private void Start()
     {
         _photonView = PhotonView.Get(this);
-
-        //_zombiePosition = transform.position;
         _maxHealth = _health;
-
-        
-
-        //_nextPosition = _firstCheckpointTransform.position;
-        //_meshUnite.destination = NextPosition;
-
-        
 
         if (PhotonNetwork.IsMasterClient)
         {
             _anim = GetComponent<Animator>();
             _anim.SetBool("Move", true);
-
             _meshUnite = GetComponent<NavMeshAgent>();
             _meshUnite.updatePosition = false;
             _meshUnite.destination = NextPosition;
@@ -166,7 +152,6 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
 
     private void Rnd()
     {
-        //_audioZombie[_rnd.Next(_audioZombie.Length)].Play();
         _audioZombie.clip = _audioClips[_rnd.Next(_audioClips.Length)];
         _audioZombie.Play();
     }
@@ -180,7 +165,6 @@ public class ZombieModelM : MonoBehaviourPunCallbacks, IZombie, IPunObservable
     IEnumerator DeathZombie()
     {
         yield return new WaitForSeconds(5f);
-        //ZombieDie = false;
         gameObject.SetActive(false);
     }
 

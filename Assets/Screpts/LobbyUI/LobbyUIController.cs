@@ -133,7 +133,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     {
         _namePlayerPlayerInfoTxt.text = result.AccountInfo.Username;
         GameProfile.PlayerName = result.AccountInfo.Username;
-        //StartPhotoneServer(result.AccountInfo.Username);
     }
 
     private void GetInventorySuccess(GetUserInventoryResult obj)
@@ -146,7 +145,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private void GetCatalogSuccess(GetCatalogItemsResult obj)
     {
         HandleCatalog(obj.Catalog);
-        Debug.Log($"Catalog was loaded successfully!");
     }
 
     #endregion
@@ -155,22 +153,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
     private void BackPlayerInfoButton()
     {
-        //GameProfile.FlagGameOff.Value = true;
-
-        //_account.SetActive(true);
-        //_playerInfo.SetActive(false);
-
-        /*if (obj)
-        {
-            _backgroundSound.Play();
-
-            PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
-
-            _playerInfo.SetActive(true);
-            _allAccount.SetActive(true);
-            //SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
-            SceneManager.UnloadSceneAsync("Game");
-        }*/
+        
     }
 
     private void OkPlayerInfoButton()
@@ -189,7 +172,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     {
         _namePlayerPlayerInfoTxt.text = result.AccountInfo.Username;
         GameProfile.PlayerName = result.AccountInfo.Username;
-        //StartPhotoneServer(result.AccountInfo.Username);
     }
 
     #endregion
@@ -199,8 +181,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private void AddInventoryButton()
     {
         _nameGunPlayerInfoTxt.text = _nameForBuy;
-        Debug.Log(_itemIdForBuy);
-        //добавляется оруужие в меню и выходит назад в меню
         _inventory.SetActive(false);
         _playerInfo.SetActive(true);
     }
@@ -209,7 +189,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     {
         PlayFabClientAPI.PurchaseItem(new PurchaseItemRequest
         {
-            // In your game, this should just be a constant matching your primary catalog
             CatalogVersion = "2",
             ItemId = _itemIdForBuy,
             Price = _priceForBuy,
@@ -217,16 +196,12 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         }, LogSuccess => 
         {
             _nameGunPlayerInfoTxt.text = _nameForBuy;
-            Debug.Log("Gun buyed");
         }
         , LogFailure => 
         {
             Debug.LogError("Gun not buyed");
         });
 
-
-
-        //покупается оружие и добавляется на сервер клиету и выходит назад в меню
         _inventory.SetActive(false);
         _playerInfo.SetActive(true);
     }
@@ -240,7 +215,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     private void OnGetCatalogSuccess(GetCatalogItemsResult obj)
     {
         HandleCatalog(obj.Catalog);
-        Debug.Log($"Catalog was loaded successfully!");
     }
 
     private void HandleCatalog(List<CatalogItem> catalog)
@@ -248,7 +222,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         foreach (var item in catalog)
         {
             _catalog.Add(item.ItemId, item);
-            Debug.Log($"Catalog item {item.ItemId} was added successfully!");
         }
 
         CatalogFormation();
@@ -261,7 +234,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         for (int i = 0; i < ii; i++)
         {
             _gunsInventoryImage[i].sprite = _gunIcons[i];
-            //Debug.Log(_catalog["gun"+(i+1).ToString()].DisplayName);
             var cat = _catalog["gun" + (i + 1).ToString()];
             var spr = _gunIcons[i];
             _gunsInventoryButton[i].onClick.AddListener(delegate { ClickButtonsInventory((CatalogItem)cat, (Sprite) spr); });
@@ -285,7 +257,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < _inventoryList.Count; i++)
             {
-                if (cat.ItemId.Equals(_inventoryList[i].ItemId))     //if(cat.ItemId == _inventoryList[i].ItemId)
+                if (cat.ItemId.Equals(_inventoryList[i].ItemId))
                 {
                     _AddInventoryButton.gameObject.SetActive(true);
                     _buyNoInventoryButton.SetActive(false);
@@ -351,8 +323,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         GameProfile.GunDamage = _damageForBuy;
         GameProfile.GunRange = _rangeForBuy;
         GameProfile.GameMode = GameMode.Multiplayer;
-        //_gameMode.SetActive(false);
-        //_multiplayerMenu.SetActive(true);
         _clickButtonRooms = true;
         StartPhotoneServer(_namePlayerPlayerInfoTxt.text);
         
@@ -405,7 +375,6 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Photone! OnConnectedToMaster");
-        //_connectedToPhotone = true;
         PhotonNetwork.JoinLobby(_customLobby);
     }
 
@@ -417,7 +386,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         _roomList = roomList;
-        Debug.Log($"RoomListUpdate ({roomList.Count})");
+        
         if(roomList.Count != 0)
         {
             for (int i = 0; i < _buttonsRoomsTxt.Length; i++)
@@ -440,17 +409,8 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(name);
     }
 
-    public override void OnCreatedRoom()
-    {
-        Debug.Log("CreatedRoom");
-    }
-
     public override void OnJoinedRoom()
     {
-        Debug.Log("JoinedRoom");
-        //PhotonNetwork.LoadLevel("Game");  //переделать как раньше
-
-
         _multiplayerMenu.SetActive(false);
         _multiplayerStartGame.SetActive(true);
 
@@ -489,11 +449,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            //PhotonNetwork.LoadLevel("Game");
-            
-            GameProfile.Players = _players.Count;
-
-            _photonView.RPC("StartGame", RpcTarget.All);
+             _photonView.RPC("StartGame", RpcTarget.All);
         }
     }
 

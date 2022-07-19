@@ -9,7 +9,6 @@ public class PlayerModel : MonoBehaviour, IPlayer
     private Animator _anim;
     private bool _playerDie = false;
     private bool _playerOff = false;
-    private bool _playerIsMine;
     private int _numberKilledZombie = 0;
 
     public string Name { get => gameObject.name; }

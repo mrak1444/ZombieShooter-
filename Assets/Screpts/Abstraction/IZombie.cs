@@ -19,6 +19,5 @@ public interface IZombie
     void Spawn(Vector3 spawnPoint);
     void DisableZombie();
     bool FalgAccessDeath { get; set; }
-
     void AssignPosition(Transform position);
 }

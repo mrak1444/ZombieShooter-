@@ -96,7 +96,6 @@ public class MoveController : MonoBehaviour
     private void Rotation()
     {
         var num = new Vector3(Input.GetAxis("Mouse Y") * _rotationSpeed * Time.deltaTime, Input.GetAxis("Mouse X") * _rotationSpeed * Time.deltaTime, 0);
-
         var vect = new Vector3(-num.x, 0, 0);
 
         this.transform.Rotate(new Vector3(0, num.y, 0));

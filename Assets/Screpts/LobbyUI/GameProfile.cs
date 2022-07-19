@@ -1,7 +1,4 @@
 using PlayFab.ClientModels;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public static class GameProfile
 {
@@ -10,9 +7,7 @@ public static class GameProfile
     private static int _gunDamage;
     private static int _gunRange;
     private static int _maxZombies = 30;
-    private static int _players;
     private static GameMode _gameMode;
-    private static NewAndContinuationGame _newAndContinuationGame = NewAndContinuationGame.NewGame;
     private static GetAccountInfoResult _result1;
     private static GetUserInventoryResult _result2;
     private static GetCatalogItemsResult _result3;
@@ -29,8 +24,6 @@ public static class GameProfile
     public static SubscriptionProperty<bool> FlagGameOff = new SubscriptionProperty<bool>();
     public static int MaxZombies { get => _maxZombies; set => _maxZombies = value; }
     public static GameMode GameMode { get => _gameMode; set => _gameMode = value; }
-    public static NewAndContinuationGame NewAndContinuationGame { get => _newAndContinuationGame; set => _newAndContinuationGame = value; }
-    public static int Players { get => Players; set => _players = value; }
     public static GetAccountInfoResult ResultGetAccountInfo { get => _result1; set => _result1 = value; }
     public static GetUserInventoryResult ResultGetUserInventory { get => _result2; set => _result2 = value; }
     public static GetCatalogItemsResult ResultGetCatalogItems { get => _result3; set => _result3 = value; }

@@ -1,18 +1,14 @@
 using Photon.Pun;
-using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
+public class StartUIController : MonoBehaviourPunCallbacks
 {
     [Header("Background sound")]
     [SerializeField] private AudioSource _backgroundSound;
-
 
     [Header("Account")]
     [SerializeField] private GameObject _account;
@@ -34,27 +30,11 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
     [SerializeField] private InputField _usernameCreateAccount;
     [SerializeField] private InputField _passwordCreateAccount;
 
-    private PhotonView _photonView;
-    private readonly Dictionary<string, CatalogItem> _catalog = new Dictionary<string, CatalogItem>();
-    private Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
-    private List<ItemInstance> _inventoryList = new List<ItemInstance>();
-    private string _nameForBuy;
-    private int _damageForBuy;
-    private int _rangeForBuy;
-    private string _itemIdForBuy;
-    private int _priceForBuy;
-    private bool _connectedToPhotone = false;
-    private RoomOptions _roomOptions = new RoomOptions();
-    private TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
-    private List<Player> _players = new List<Player>();
-    private List<RoomInfo> _roomList = new List<RoomInfo>();
     private bool _flag1, _flag2, _flag3 = false; 
 
 
     private void Start()
     {
-        _photonView = PhotonView.Get(this);
-
         //Account
         _signInAccountButton.onClick.AddListener(SignInAccountButton);
         _createAccountButton.onClick.AddListener(CreateAccountButton);
@@ -104,17 +84,10 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
             PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest(), OnGetCatalogSuccess, OnFailure);
             
             Debug.Log($"Success: {_usernameSignIn.text}");
-
-            //_playerInfo.SetActive(true);
-            //_signIn.SetActive(false);
-            
         }, error =>
         {
             Debug.LogError($"Fail: {error.ErrorMessage}");
         });
-
-        //подключается к серверам поле удачного подключения открывает панель PlayerInfo
-
     }
 
     private void OnFailure(PlayFabError error)
@@ -168,14 +141,10 @@ public class StartUIController : MonoBehaviourPunCallbacks //MonoBehaviour
             };
             _account.SetActive(true);
             _createAccount.SetActive(false);
-            Debug.Log($"Success: {_usernameCreateAccount.text}");
         }, error =>
         {
             Debug.LogError($"Fail: {error.ErrorMessage}");
         });
-
-        //создает нового пользователя в playfab и выходит назад в меню
-
     }
 
     #endregion

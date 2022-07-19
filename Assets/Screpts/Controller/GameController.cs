@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +8,6 @@ public class GameController : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _singlePlayer;
     [SerializeField] private GameObject _multyPlayer;
     [SerializeField] private Transform _spawnPlayer;
-    //[SerializeField] private GameObject[] _zombiesGameObject;
     [SerializeField] private ZombiesGameObjectModel[] _zombiesGameObjectModel;
     [SerializeField] private CheckpointModel _checkpointModel;
     [SerializeField] private GameObject[] _spawnPoints;
@@ -42,14 +40,13 @@ public class GameController : MonoBehaviourPunCallbacks
 
         _maxZombies = GameProfile.MaxZombies;
 
-        //_playerGameObject = GameObject.FindGameObjectsWithTag("Player");
         _playerGameObject = new GameObject[1];
         _playerGameObject[0] = Instantiate(_singlePlayer, _spawnPlayer.position, Quaternion.identity);
 
         _rndCheckpoint = new RndCheckpoint(_checkpointModel);
 
         _uniteCheckpointController = new UniteCheckpointController(_zombie, _rndCheckpoint);
-        _findPlayerController = new FindPlayerController(_player, _zombie, _rndCheckpoint);
+        _findPlayerController = new FindPlayerController(_player, _zombie);
 
         _zombiesGameObject = Instantiate(_zombiesGameObjectModel[0], new Vector3(0, 0, 0), Quaternion.identity).ZombiesGameObject;
 
@@ -114,13 +111,13 @@ public class GameController : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient) z.AssignPosition(_rndCheckpoint.RND());
             _zombie.Add(z);
             _zombie1.Add(zombie.name, z);
-            if (!PhotonNetwork.IsMasterClient) Debug.Log($"zombie name - {zombie.name}");   ///////
+            if (!PhotonNetwork.IsMasterClient) Debug.Log($"zombie name - {zombie.name}");
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
             _uniteCheckpointController = new UniteCheckpointController(_zombie, _rndCheckpoint);
-            _findPlayerController = new FindPlayerController(_player, _zombie, _rndCheckpoint);
+            _findPlayerController = new FindPlayerController(_player, _zombie);
         }
 
         _uiController.Run(_player1[p.name].Health, _maxZombies);

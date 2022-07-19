@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +19,6 @@ public class GunControllerM : MonoBehaviourPun
     private Transform _rightHandObj = null;
     private Transform _leftHandObj = null;
     private Dictionary<string, GameObject> _gunPrefDict = new Dictionary<string, GameObject>();
-    private bool _flagFire = false;
 
     private void Start()
     {
@@ -30,11 +28,6 @@ public class GunControllerM : MonoBehaviourPun
         {
             _gunPrefDict.Add(item.name, item);
         }
-
-        /*for (int i = 0; i < _gunPref.Length; i++)
-        {
-            _gunPrefDict.Add(_gunPref[i].name, _gunPref[i]);
-        }*/
 
         _gunObj = Instantiate(_gunPrefDict[GameProfile.GunId], _gunPoint.transform.position, Quaternion.identity);
         _gunObj.transform.SetParent(_parent.transform);
@@ -63,16 +56,10 @@ public class GunControllerM : MonoBehaviourPun
             _shot.Play();
             if (Physics.Raycast(_cam.transform.position, _cam.transform.forward, out hit, (float)GameProfile.GunRange, _layermask))
             {
-                Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 100f);
-
                 if (hit.transform.gameObject.CompareTag("Zombie"))
                 {
                     GameProfile.DamageForZombie.Value = new SubscriptionData(gameObject.name, hit.transform.gameObject.name, _gunModel.Damage);
                 }
-            }
-            else
-            {
-                Debug.DrawRay(_cam.transform.position, _cam.transform.forward, Color.yellow, 10f);
             }
         }
     }
