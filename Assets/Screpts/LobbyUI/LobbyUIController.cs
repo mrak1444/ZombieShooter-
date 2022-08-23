@@ -164,6 +164,10 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
     private void BuyGunPlayerInfoButton()
     {
+        GetAccountSuccess(GameProfile.ResultGetAccountInfo);
+        GetInventorySuccess(GameProfile.ResultGetUserInventory);
+        //GetCatalogSuccess(GameProfile.ResultGetCatalogItems);
+
         _inventory.SetActive(true);
         _playerInfo.SetActive(false);
     }
@@ -340,6 +344,7 @@ public class LobbyUIController : MonoBehaviourPunCallbacks
 
     private void CreateRoomeMultiplayerMenuButton()
     {
+        GameProfile.EndGameFlag = false;
         bool flagRoomName = false;
         string nameRoom = "";
         int n = 0;

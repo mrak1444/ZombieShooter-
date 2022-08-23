@@ -17,12 +17,23 @@ public class UIControllerGame : MonoBehaviour
     [SerializeField] private GameObject _camera;
     [SerializeField] private TMP_Text _infoEndGame;
     [SerializeField] private Button QuitGameButton;
+    [SerializeField] private GameObject _escPanel;
+    [SerializeField] private Button _escQuitGameButton;
+
+    public GameObject ESCPanel { get => _escPanel; set => _escPanel = value; }
 
     private int _zombies;
 
     private void Start()
     {
         QuitGameButton.onClick.AddListener(QuitGame);
+        _escQuitGameButton.onClick.AddListener(ESCQuitGame);
+    }
+
+    private void ESCQuitGame()
+    {
+        _escPanel.SetActive(false);
+        GameProfile.EndGameFlag = true;
     }
 
     public void Run(int health, int zombies)
@@ -101,11 +112,41 @@ public class UIControllerGame : MonoBehaviour
             {
                 Debug.LogError(error);
             });
+
+        
+    }
+
+    private void OnGetAccountSuccess(GetAccountInfoResult result)
+    {
+        GameProfile.ResultGetAccountInfo = result;
+    }
+
+    private void OnGetInventorySuccess(GetUserInventoryResult obj)
+    {
+        GameProfile.ResultGetUserInventory = obj;
+    }
+
+    private void OnGetCatalogSuccess(GetCatalogItemsResult obj)
+    {
+        GameProfile.ResultGetCatalogItems = obj;
+    }
+
+    private void OnFailure(PlayFabError error)
+    {
+        var errorMessage = error.GenerateErrorReport();
+        Debug.LogError($"Something went wrong: {errorMessage}");
     }
 
     private void QuitGame()
     {
-        if (GameProfile.GameMode == GameMode.Multiplayer) PhotonNetwork.LeaveRoom();  // проверить на работаспособность
+        if (GameProfile.GameMode == GameMode.Multiplayer) 
+        { 
+            PhotonNetwork.LeaveRoom();
+
+            PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest(), OnGetAccountSuccess, OnFailure);
+            PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetInventorySuccess, OnFailure);
+            PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest(), OnGetCatalogSuccess, OnFailure);
+        }
         SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
     }
 }

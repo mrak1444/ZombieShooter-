@@ -129,8 +129,16 @@ public class GameController : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Cursor.lockState == CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Confined;
-            else Cursor.lockState = CursorLockMode.Locked;
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                _uiController.ESCPanel.SetActive(true);
+            }
+            else 
+            { 
+                Cursor.lockState = CursorLockMode.Locked;
+                _uiController.ESCPanel.SetActive(false);
+            }
         }
 
 

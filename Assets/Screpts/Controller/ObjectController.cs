@@ -1,4 +1,6 @@
 using Photon.Pun;
+using PlayFab;
+using PlayFab.ClientModels;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,13 +65,13 @@ public class ObjectController
             _killZombieAll += p.Value.NumberKilledZombie;
         }
 
-        if(_killZombieAll == _maxZombies || _player[_name].PlayerDie)
+        if(_killZombieAll == _maxZombies || _player[_name].PlayerDie || GameProfile.EndGameFlag)
         {
             if (_flagEndGame)
             {
                 _player[_name].PlayerOff = true;
                 _flagEndGame = false;
-                _uiController.EndGameKillZombie(_killZombiePlayer, _player, _name);   //переделать на мультиплеер
+                _uiController.EndGameKillZombie(_killZombiePlayer, _player, _name);
             }
             
         }
@@ -83,6 +85,8 @@ public class ObjectController
             CheckingDeath();
         }
     }
+
+    
 
     private void CheckingDeath()
     {
